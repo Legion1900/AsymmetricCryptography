@@ -9,8 +9,7 @@ namespace AsymmetricCryptography.Generators
 
         public override byte Next()
         {
-            NextXn();
-            return Xn.ToByteArray()[0];
+            return X.ToByteArray()[0];
         }
     }
 }

@@ -9,26 +9,29 @@ namespace AsymmetricCryptography.Generators
         public static readonly BigInteger M = BigInteger.Pow(2, 32);
         public static readonly int C = 119;
 
-        protected BigInteger Xn
+        private BigInteger _x;
+
+        protected BigInteger X
         {
-            get;
-            private set;
+            get
+            {
+                X = (A * _x + C) % M;
+                return _x;
+            }
+            private set
+            {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(value), "Value of X should be bigger than 0");
+                _x = value;
+            }
         }
 
         // Should return appropriate byte of Xn
         public abstract byte Next();
 
-        protected LehmerGenerator(BigInteger x0)
+        protected LehmerGenerator(BigInteger seed)
         {
-            if (x0 <= 0)
-                throw new ArgumentOutOfRangeException("BigInteger x0", "Value of x0 should be bigger than 0");
-            Xn = x0;
-        }
-
-        // Calculates next Xn value
-        protected void NextXn()
-        {
-            Xn = (A * Xn + C) % M;
+            X = seed;
         }
     }
 }
