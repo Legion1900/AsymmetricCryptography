@@ -4,7 +4,7 @@ namespace AsymmetricCryptography.Generators
 {
     public class LehmerLow : LehmerGenerator
     {
-        public LehmerLow(BigInteger x0) : base(x0)
+        public LehmerLow(BigInteger seed) : base(seed)
         {}
 
         public override byte Next()
