@@ -14,7 +14,10 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
         {
             char newBit;
 //            newBit = (char)(register[16] ^ register[14] ^ register[10] ^ register[0]);
-            newBit = (register[16] ^ register[14] ^ register[10] ^ register[0]).ToString()
+//            newBit = (register[16] ^ register[14] ^ register[10] ^ register[0]).ToString()
+//                .ToCharArray()[0];
+            
+            newBit = (register[17] ^ register[15] ^ register[11] ^ register[0]).ToString()
                 .ToCharArray()[0];
             
 //            Console.WriteLine("Input: {0} ^ {1} ^ {2} ^ {3}"
