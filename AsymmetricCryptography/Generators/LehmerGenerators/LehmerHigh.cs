@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace AsymmetricCryptography.Generators
+namespace AsymmetricCryptography.Generators.LehmerGenerators
 {
     public class LehmerHigh : LehmerGenerator
     {

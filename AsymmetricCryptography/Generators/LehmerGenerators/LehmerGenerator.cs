@@ -1,15 +1,17 @@
 using System;
 using System.Numerics;
 
-namespace AsymmetricCryptography.Generators
+namespace AsymmetricCryptography.Generators.LehmerGenerators
 {
-    public abstract class LehmerGenerator
+    public abstract class LehmerGenerator : IGenerator
     {
-        public static readonly BigInteger A = BigInteger.Pow(2, 16) + 1;
-        public static readonly BigInteger M = BigInteger.Pow(2, 32);
-        public static readonly int C = 119;
+        private static readonly BigInteger A = BigInteger.Pow(2, 16) + 1;
+        private static readonly BigInteger M = BigInteger.Pow(2, 32);
+        private static readonly int C = 119;
 
         private BigInteger _x;
+        
+        public abstract byte Next();
 
         protected BigInteger X
         {
@@ -25,9 +27,6 @@ namespace AsymmetricCryptography.Generators
                 _x = value;
             }
         }
-
-        // Should return appropriate byte of Xn
-        public abstract byte Next();
 
         protected LehmerGenerator(BigInteger seed)
         {
