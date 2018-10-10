@@ -7,7 +7,7 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
         public L20(long seed) : base(seed, Length)
         {}
 
-        protected override char NextBit()
+        public override char NextBit()
         {
             var newBit = (register[17] ^ register[15] ^ register[11] ^ register[0]).ToString()
                 .ToCharArray()[0];

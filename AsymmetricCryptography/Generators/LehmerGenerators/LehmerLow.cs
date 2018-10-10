@@ -7,7 +7,7 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         public LehmerLow(BigInteger seed) : base(seed)
         {}
 
-        public override byte Next()
+        public override byte NextByte()
         {
             return X.ToByteArray()[0];
         }

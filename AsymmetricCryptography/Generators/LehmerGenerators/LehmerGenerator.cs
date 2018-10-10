@@ -11,7 +11,7 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
 
         private BigInteger _x;
         
-        public abstract byte Next();
+        public abstract byte NextByte();
 
         protected BigInteger X
         {
@@ -31,6 +31,11 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         protected LehmerGenerator(BigInteger seed)
         {
             X = seed;
+        }
+        
+        char IGenerator.NextBit()
+        {
+            throw new NotImplementedException();
         }
     }
 }

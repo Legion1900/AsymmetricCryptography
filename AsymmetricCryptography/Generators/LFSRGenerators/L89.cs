@@ -4,7 +4,7 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
     {
         private const int Length = 89;
 
-        protected override char NextBit()
+        public override char NextBit()
         {
             char newBit = (register[51] ^ register[0]).ToString().ToCharArray()[0];
             register.Add(newBit);

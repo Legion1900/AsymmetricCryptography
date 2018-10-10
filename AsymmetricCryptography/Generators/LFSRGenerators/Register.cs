@@ -32,7 +32,7 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
         }
 
         // seed - initial state
-        public byte Next()
+        public byte NextByte()
         {
             var outByte = new char[8];
             for (int i = 0; i < outByte.Length; i++)
@@ -45,6 +45,6 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
         }
 
         // Bit generation logic
-        protected abstract char NextBit();
+        public abstract char NextBit();
     }
 }
