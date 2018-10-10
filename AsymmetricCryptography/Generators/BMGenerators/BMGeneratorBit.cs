@@ -2,17 +2,20 @@ using System;
 using System.Text;
 using System.Numerics;
 using System.Collections;
-using System.Globalization;
 
-namespace symmetricCryptography.Generators.BMGenerators
+namespace AsymmetricCryptography.Generators.BMGenerators
 {
     public class BMGeneratorBit: BMGenerator
     {
-        public static void Result(){	
+        public static void Result(){
+            int size = 100; //GENERATED SEQUENCE SIZE
+
 			BigInteger p = RandomIntegerBetween(0, P);
-			Console.Write("base: " + A + "\nexponent: " + p + "\nmodulus: " + P);
-			
-			Console.Write("\n\n" + BitToString(GenerateSequence(p, 100))); // will generate sequence of 100/8 hex			
+			BitArray bitRes = GenerateSequence(p, size);
+
+			Console.WriteLine("\nBlum–Micali BIT generator" + 
+            "\nbase: " + A + "\nexponent (seed): " + p + "\nmodulus: " + P + 
+            "\n\n" + BitToString(bitRes) + "\n");
 	    }
 
         public static String BitToString(BitArray bitArray){
@@ -36,18 +39,21 @@ namespace symmetricCryptography.Generators.BMGenerators
                 if(i % 64 == 1 && i != 1) result += "\n";
             }
 
-            return result += "\n";
+            return result;
         }
 
         public static BitArray GenerateSequence(BigInteger seed, int size){
-			size *= 8;
+			// since we need to convert our bit array to bytes when we're done
+            // we want the size to be devided by 8 (aka byte size in bits)
+            size *= 8; 
+            
             BitArray bitArrayRes = new BitArray(size);
-            bitArrayRes.Set(0, seed < (P - 1) / 2 ? true: false);
+            bitArrayRes.Set(0, (seed < (P - 1) / 2 ? true: false));
             
 			T = seed;
 
             for (int i = 1; i < size; i++){
-                bitArrayRes.Set(i, T < (P - 1) / 2 ? true: false);// = T < (P - 1) / 2 ? true: false;
+                bitArrayRes.Set(i, (T < (P - 1) / 2 ? true: false));
             }
 
             return bitArrayRes;

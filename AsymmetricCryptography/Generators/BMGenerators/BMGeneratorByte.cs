@@ -1,30 +1,38 @@
 using System;
 using System.Text;
 using System.Numerics;
-using System.Collections;
-using System.Globalization;
 
-namespace symmetricCryptography.Generators.BMGenerators
+namespace AsymmetricCryptography.Generators.BMGenerators
 {
     public class BMGeneratorByte: BMGenerator
     {
         public static void Result(){
-            BigInteger p = RandomIntegerBetween(0, P);
-			Console.Write("base: " + A + "\nexponent: " + p + "\nmodulus: " + P);
+            int size = 100; //GENERATED SEQUENCE SIZE
 
-            GenerateSequence(p, 100);
-            int count = 0;
-            Console.Write("\n\n");
-            foreach(byte b in GenerateSequence(p, 100)){
-                Console.Write(b.ToString("X1"));
-                count++;
-                Console.Write(" ");
-                if(count % 32 == 1 && count != 1) Console.Write("\n");
-            }
-            Console.Write("\n");
+            BigInteger p = RandomIntegerBetween(0, P);
+            Byte[] byteResult = GenerateSequence(p, size);
+
+            Console.WriteLine("\nBlum–Micali BYTE generator" +
+            "\nbase: " + A + "\nexponent (seed): " + p + "\nmodulus: " + P +
+            "\n\n" + ConvertForOut(byteResult) + "\n");
         }
 
-        public static byte[] GenerateSequence(BigInteger seed, int size){
+        public static String ConvertForOut(Byte[] bytes){
+            String hexResult = BitConverter.ToString(bytes).Replace("-", string.Empty);
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+
+            foreach(char ch in hexResult.ToCharArray()){
+                sb.Append(ch);
+                if (count % 2 == 1) sb.Append(" ");
+                if (count % 64 == 1 && count != 1) sb.Append("\n");
+                count++;
+            }
+
+            return sb.ToString();
+        }
+
+        public static Byte[] GenerateSequence(BigInteger seed, int size){
             Byte[] bytes = new Byte[size];
             bytes[0] = (byte)(int)((seed * 256) / (P - 1));
 			T = seed;
@@ -33,7 +41,7 @@ namespace symmetricCryptography.Generators.BMGenerators
                 bytes[i] = (byte)(int)((T * 256) / (P - 1));
             }
 
-            return bytes;// bytes;
+            return bytes;
         }
     }
 }
