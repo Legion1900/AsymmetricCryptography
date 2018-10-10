@@ -6,9 +6,8 @@ namespace AsymmetricCryptography.Generators.BMGenerators
 {
     public class BMGeneratorByte: BMGenerator
     {
-        public static void Result(){
-            int size = 100; //GENERATED SEQUENCE SIZE
-
+        public static void Result(int size)
+        {
             BigInteger p = RandomIntegerBetween(0, P);
             Byte[] byteResult = GenerateSequence(p, size);
 
@@ -17,12 +16,14 @@ namespace AsymmetricCryptography.Generators.BMGenerators
             "\n\n" + ConvertForOut(byteResult) + "\n");
         }
 
-        public static String ConvertForOut(Byte[] bytes){
+        public static String ConvertForOut(Byte[] bytes)
+        {
             String hexResult = BitConverter.ToString(bytes).Replace("-", string.Empty);
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            foreach(char ch in hexResult.ToCharArray()){
+            foreach(char ch in hexResult.ToCharArray())
+            {
                 sb.Append(ch);
                 if (count % 2 == 1) sb.Append(" ");
                 if (count % 64 == 1 && count != 1) sb.Append("\n");
@@ -32,16 +33,18 @@ namespace AsymmetricCryptography.Generators.BMGenerators
             return sb.ToString();
         }
 
-        public static Byte[] GenerateSequence(BigInteger seed, int size){
-            Byte[] bytes = new Byte[size];
-            bytes[0] = (byte)(int)((seed * 256) / (P - 1));
+        public static Byte[] GenerateSequence(BigInteger seed, int size)
+        {
+            Byte[] byteArrayRes = new Byte[size];
+            byteArrayRes[0] = (byte)(int)((seed * 256) / (P - 1));
 			T = seed;
 
-            for(int i = 1; i < size; i++){
-                bytes[i] = (byte)(int)((T * 256) / (P - 1));
+            for(int i = 1; i < size; i++)
+            {
+                byteArrayRes[i] = (byte)(int)((T * 256) / (P - 1));
             }
 
-            return bytes;
+            return byteArrayRes;
         }
     }
 }

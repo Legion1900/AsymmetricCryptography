@@ -2,8 +2,10 @@ using System;
 using System.Numerics;
 using System.Globalization;
 
-namespace AsymmetricCryptography.Generators.BMGenerators{
-    public class BMGenerator {
+namespace AsymmetricCryptography.Generators.BMGenerators
+{
+    public class BMGenerator 
+    {
 
         // hex values of p, a and q, where p = 2*q + 1
         private const String hexP = "0CEA42B987C44FA642D80AD9F51F10457690DEF10C83D0BC1BCEE12FC3B6093E3";
@@ -14,12 +16,15 @@ namespace AsymmetricCryptography.Generators.BMGenerators{
 		protected static BigInteger A = BigInteger.Parse(BMGenerator.hexA, NumberStyles.AllowHexSpecifier);
 
         private static BigInteger _t;
-        protected static BigInteger T {
-            get {
+        protected static BigInteger T 
+        {
+            get 
+            {
                 _t = BigPow(A, _t, P);
                 return _t;
             }
-            set {
+            set 
+            {
 				_t = value; //use once for initialisation with seed
             }
         }
@@ -27,7 +32,8 @@ namespace AsymmetricCryptography.Generators.BMGenerators{
         
         // "_base" to a power of "exponent" by a modulus || T = Pow(A, _t) (mod P)
         // using recursive power algorythm, exponentially raising to a power of 2 to speed things up
-        public static BigInteger BigPow(BigInteger _base, BigInteger exponent, BigInteger modulus){
+        public static BigInteger BigPow(BigInteger _base, BigInteger exponent, BigInteger modulus)
+        {
             BigInteger count = 1;
             BigInteger res = _base;
 
@@ -65,7 +71,8 @@ namespace AsymmetricCryptography.Generators.BMGenerators{
 
 
         // Fill a byte array of a size of a BigInteger with random bytes
-        public static BigInteger RandomIntegerBetween(BigInteger a, BigInteger b) {
+        public static BigInteger RandomIntegerBetween(BigInteger a, BigInteger b) 
+        {
             byte[] bytes = b.ToByteArray ();
             BigInteger R;
 

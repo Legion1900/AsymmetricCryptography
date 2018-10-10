@@ -1,15 +1,14 @@
 using System;
 using System.Numerics;
-using AsymmetricCryptography.Generators.BMGenerators;
+using Generators.src.BMGenerators;
 
 
 namespace AsymmetricCryptography.Generators.BBSGenerators
 {
     public class BBSGeneratorByte: BBSGenerator
     {
-        public static void Result(){
-            int size = 100; //GENERATED SEQUENCE SIZE
-
+        public static void Result(int size)
+        {
             BigInteger p = RandomIntegerAbove(2);
             Byte[] byteResult = GenerateSequence(p, size);
 
@@ -18,16 +17,18 @@ namespace AsymmetricCryptography.Generators.BBSGenerators
             "\n\n" + BMGeneratorByte.ConvertForOut(byteResult) + "\n");
         }
 
-        public static Byte[] GenerateSequence(BigInteger seed, int size){
+        public static Byte[] GenerateSequence(BigInteger seed, int size)
+        {
+            Byte[] byteArrayRes = new Byte[size];
             R = seed;
-            Byte[] resBytes = new Byte[size];
 
-            for (int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++)
+            {
                 BigInteger r = R;
-                resBytes[i] = (byte)(int)(r % 256);
+                byteArrayRes[i] = (byte)(int)(r % 256);
             }
             
-            return resBytes;
+            return byteArrayRes;
         }
     }
 }

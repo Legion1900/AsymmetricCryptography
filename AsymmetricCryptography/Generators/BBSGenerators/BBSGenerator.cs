@@ -16,23 +16,28 @@ namespace AsymmetricCryptography.Generators.BBSGenerators
 
 
         private static BigInteger _r;
-        protected static BigInteger R {
-            get {
+        protected static BigInteger R 
+        {
+            get 
+            {
                 _r = BigInteger.Pow(_r, 2) % N;
                 return _r;
             }
-            set {
+            set 
+            {
                 _r = value; //use once for initialisation with seed
             }
         }
 
-        public static BigInteger RandomIntegerAbove(BigInteger a) {
+        public static BigInteger RandomIntegerAbove(BigInteger a) 
+        {
             byte[] bytes = N.ToByteArray ();
             BigInteger R;
 
             Random random = new Random();
 
-            do {
+            do 
+            {
                 random.NextBytes (bytes);
                 bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
                 R = new BigInteger (bytes);
