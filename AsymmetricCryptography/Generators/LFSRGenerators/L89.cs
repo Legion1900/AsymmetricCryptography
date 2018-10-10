@@ -6,11 +6,8 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
 
         public override char NextBit()
         {
-            char newBit = (register[51] ^ register[0]).ToString().ToCharArray()[0];
-            register.Add(newBit);
-            char output = register[0];
-            register.RemoveAt(0);
-            return output;
+            char newBit = (this[51] ^ this[0]).ToString().ToCharArray()[0];
+            return Push(newBit);
         }
         
         public L89(long seed) : base(seed, Length)

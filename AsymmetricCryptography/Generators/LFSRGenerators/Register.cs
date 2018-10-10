@@ -6,7 +6,7 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
 {
     public abstract class Register : IGenerator
     {   
-        protected readonly List<char> register;
+        private readonly List<char> register;
         
         protected Register(long seed, int length)
         {
@@ -24,9 +24,10 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
                 strBits = builder.ToString();
             }
 
-//            Console.WriteLine("Seed(base 10): {0}", seed);
-//            Console.WriteLine("Seed(base 2): {0}", strBits);
-//            Console.WriteLine("Length: {0}", strBits.Length);
+            Console.WriteLine("Name: {0}", this.GetType().Name);
+            Console.WriteLine("Seed(base 10): {0}", seed);
+            Console.WriteLine("Seed(base 2): {0}", strBits);
+            Console.WriteLine("Length: {0}", strBits.Length);
             
             register = new List<char>(strBits.ToCharArray());
         }
@@ -42,6 +43,19 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
             var tmp = new string(outByte);
             
             return Convert.ToByte(tmp, 2);
+        }
+
+        protected char Push(char bit)
+        {
+            register.Add(bit);
+            char output = register[0];
+            register.RemoveAt(0);
+            return output;
+        }
+
+        public char this[int i]
+        {
+            get { return register[i]; }
         }
 
         // Bit generation logic

@@ -31,6 +31,9 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         protected LehmerGenerator(BigInteger seed)
         {
             X = seed;
+
+            Console.WriteLine("Name: {0}", this.GetType().Name);
+            Console.WriteLine("Seed: {0}", X);
         }
         
         char IGenerator.NextBit()
