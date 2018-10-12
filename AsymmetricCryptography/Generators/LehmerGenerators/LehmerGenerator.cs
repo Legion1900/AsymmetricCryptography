@@ -12,6 +12,8 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
 
         private BigInteger _x;
 
+        public string Seed { get; }
+
         protected BigInteger X
         {
             get
@@ -30,9 +32,7 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         protected LehmerGenerator(BigInteger seed)
         {
             X = seed;
-
-//            Console.WriteLine("Name: {0}", GetType().Name);
-//            Console.WriteLine("Seed: {0}", X);
+            Seed = seed.ToString();
         }
 
         public abstract byte[] RandomBytes(int n);

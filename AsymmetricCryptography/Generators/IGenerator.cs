@@ -8,5 +8,7 @@ namespace AsymmetricCryptography.Generators
         byte[] RandomBytes(int n);
 
         BitArray RandomBits(int n);
+        
+        string Seed { get; }
     }
 }

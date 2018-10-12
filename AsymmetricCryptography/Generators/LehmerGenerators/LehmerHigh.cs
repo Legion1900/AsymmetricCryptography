@@ -7,12 +7,6 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         public LehmerHigh(BigInteger seed) : base(seed)
         {}
 
-//        public override byte[] RandomBytes()
-//        {
-//            var bytes = X.ToByteArray();
-//            return bytes[bytes.Length - 1] != 0 ? bytes[bytes.Length - 1] : bytes[bytes.Length - 2];
-//        }
-        
         public override byte[] RandomBytes(int n)
         {
             var output = new byte[n];
