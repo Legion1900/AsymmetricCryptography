@@ -1,64 +1,60 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections;
 
 namespace AsymmetricCryptography.Generators.LFSRGenerators
 {
     public abstract class Register : IGenerator
-    {   
-        private readonly List<char> register;
+    {
+        private BitArray register;
+
+        public string Seed { get; }
         
         protected Register(long seed, int length)
         {
-            long m = 0;
-            for (int i = 0; i < length; i++)
-                m += (long)Math.Pow(2, i);
-            seed %= m;
-
-            var strBits = Convert.ToString(seed, 2);
-            if (strBits.Length < length)
-            {
-                var builder = new StringBuilder(strBits);
-                while (builder.Length < length)
-                    builder.Insert(0, '0');
-                strBits = builder.ToString();
-            }
-
-            Console.WriteLine("Name: {0}", this.GetType().Name);
-            Console.WriteLine("Seed(base 10): {0}", seed);
-            Console.WriteLine("Seed(base 2): {0}", strBits);
-            Console.WriteLine("Length: {0}", strBits.Length);
+            // Maximum value that can be represented through length-bits
+            var m = (long)Math.Pow(2, length) - 1;
+            seed %= m + 1;
             
-            register = new List<char>(strBits.ToCharArray());
-        }
-
-        // seed - initial state
-        public byte NextByte()
-        {
-            var outByte = new char[8];
-            for (int i = 0; i < outByte.Length; i++)
+            register = new BitArray(length);
+            register.SetAll(false);
+            var state = Convert.ToString(seed, 2);
+            for (int i = state.Length - 1; i >= 0; i--)
             {
-                outByte[i] = NextBit();
+                if (state[i] == '1')
+                    register[i] = true;
             }
-            var tmp = new string(outByte);
-            
-            return Convert.ToByte(tmp, 2);
-        }
-
-        protected char Push(char bit)
-        {
-            register.Add(bit);
-            char output = register[0];
-            register.RemoveAt(0);
-            return output;
-        }
-
-        public char this[int i]
-        {
-            get { return register[i]; }
+            Seed = Tools.ToString(register);
         }
 
         // Bit generation logic
-        public abstract char NextBit();
+        public abstract BitArray RandomBits(int n);
+
+        public byte[] RandomBytes(int n)
+        {
+            var bytes = new byte[n];
+            for (int i = 0; i < n; i++)
+            {
+                bytes[i] = Tools.ToByte(RandomBits(8));
+            }
+
+            return bytes;
+        }
+        
+        public bool this[int i] => register[i];
+
+        protected bool Push(bool bit)
+        {
+            bool output = register[0];
+            LeftShift(1);
+            register[register.Count - 1] = bit;
+            return output;
+        }
+
+        private void LeftShift(int n)
+        {
+            for (int i = 1; i < register.Count; i++)
+                register[i - 1] = register[i];
+            register[register.Count - 1] = false;
+        }        
     }
 }
