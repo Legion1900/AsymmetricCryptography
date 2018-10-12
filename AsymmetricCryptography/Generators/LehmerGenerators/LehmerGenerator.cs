@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Numerics;
 
 namespace AsymmetricCryptography.Generators.LehmerGenerators
@@ -7,11 +8,9 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
     {
         private static readonly BigInteger A = BigInteger.Pow(2, 16) + 1;
         private static readonly BigInteger M = BigInteger.Pow(2, 32);
-        private static readonly int C = 119;
+        private const int C = 119;
 
         private BigInteger _x;
-        
-        public abstract byte NextByte();
 
         protected BigInteger X
         {
@@ -32,11 +31,13 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         {
             X = seed;
 
-            Console.WriteLine("Name: {0}", this.GetType().Name);
-            Console.WriteLine("Seed: {0}", X);
+//            Console.WriteLine("Name: {0}", GetType().Name);
+//            Console.WriteLine("Seed: {0}", X);
         }
-        
-        char IGenerator.NextBit()
+
+        public abstract byte[] RandomBytes(int n);
+
+        BitArray IGenerator.RandomBits(int n)
         {
             throw new NotImplementedException();
         }

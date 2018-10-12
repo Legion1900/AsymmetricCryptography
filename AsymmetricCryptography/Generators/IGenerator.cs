@@ -1,10 +1,12 @@
+using System.Collections;
+
 namespace AsymmetricCryptography.Generators
 {
     public interface IGenerator
     {
-        // Return random byte
-        byte NextByte();
+        // Return num of 
+        byte[] RandomBytes(int n);
 
-        char NextBit();
+        BitArray RandomBits(int n);
     }
 }
