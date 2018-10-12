@@ -54,6 +54,8 @@ namespace AsymmetricCryptography
                 if (binary[i] == '1')
                     output[i] = true;
             }
+
+            return output;
         }
     }
 }
