@@ -42,5 +42,18 @@ namespace AsymmetricCryptography
             // Bits in this byte are inverted
             return tmp;
         }
+
+        public static BitArray ToBitArray(string binary, int length = 0)
+        {
+            if (length == 0)
+                length = binary.Length;
+            BitArray output = new BitArray(length);
+            output.SetAll(false);
+            for (int i = binary.Length - 1; i >= 0; i--)
+            {
+                if (binary[i] == '1')
+                    output[i] = true;
+            }
+        }
     }
 }
