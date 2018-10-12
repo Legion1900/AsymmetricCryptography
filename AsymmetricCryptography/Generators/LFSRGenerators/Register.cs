@@ -39,8 +39,8 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
 
             return bytes;
         }
-        
-        public bool this[int i] => register[i];
+
+        protected bool this[int i] => register[i];
 
         protected bool Push(bool bit)
         {

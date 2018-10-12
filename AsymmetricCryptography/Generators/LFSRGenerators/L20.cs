@@ -6,8 +6,6 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
     {
         private const int Length = 20;
 
-        private readonly string seed;
-
         public L20(long seed) : base(seed, Length)
         {
         }

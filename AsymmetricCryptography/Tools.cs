@@ -24,14 +24,23 @@ namespace AsymmetricCryptography
         {
             if (bits.Count > 8)
                 throw new ArgumentOutOfRangeException(nameof(bits), "BitArray should have not more than 8 bits");
-            byte num = 0;
-            for (int i = 0; i < bits.Count; i++)
-            {
-                if (bits[i])
-                    num += (byte)Math.Pow(2, i);
-            }
+            
+            var bytes = new byte[1];
+            bits.CopyTo(bytes, 0);
 
-            return num;
+            // Byte bits[0] has reverse order of bits
+            var tmp = bytes[0];
+            int n = 7;
+            for (bytes[0] >>= 1; bytes[0] != 0; bytes[0] >>= 1)
+            {
+                tmp <<= 1;
+                tmp |= (byte) (bytes[0] & 1);
+                n--;
+            }
+            tmp <<= n;
+            
+            // Bits in this byte are inverted
+            return tmp;
         }
     }
 }
