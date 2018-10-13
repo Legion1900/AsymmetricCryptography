@@ -52,6 +52,8 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
                 bytes[i] = Tools.ToByte(RandomBits(8));
             }
 
+            Console.WriteLine("Geffe output: {0}", Convert.ToString(bytes[0], 2));
+
             return bytes;
         }
 
@@ -62,21 +64,13 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
             var l9 = _registers[1].RandomBits(n);
             var l10 = _registers[2].RandomBits(n);
             for (int i = 0; i < n; i++)
-            {
+            {                
                 // l10 * l11 ^ (1 ^ l10) * l9 => sum1 ^ sum2
                 // sum1 = l10 * l11
                 // sum2 = (1 ^ l10) * l9
-                byte sum1 = 0, sum2 = 0;
-                if (l10[i] ^ l11[i])
-                    sum1 = 1;
-                if (!l10[i] ^ l9[i])
-                    sum2 = 1;
-                sum1 += sum2;
-                if (sum1 == 1)
-                    bits[i] = true;
-                else bits[i] = false;
+                bits[i] = l10[i] & l11[i] ^ (!l10[i]) & l9[i];
             }
-
+            
             return bits;
         }
 
