@@ -1,26 +1,28 @@
 using System;
 using System.Numerics;
 using System.Globalization;
+using NeinMath;
 
-namespace AsymmetricCryptography.Generators.BBSGenerators
+
+namespace Generators.src.BBSGenerators
 {
     public class BBSGenerator
     {
         private const String hexP = "0D5BBB96D30086EC484EBA3D7F9CAEB07";
         private const String hexQ = "0425D2B9BFDB25B9CF6C416CC6E37B59C1F";
 
-        protected static BigInteger P = BigInteger.Parse(BBSGenerator.hexP, NumberStyles.AllowHexSpecifier);
-        protected static BigInteger Q = BigInteger.Parse(BBSGenerator.hexQ, NumberStyles.AllowHexSpecifier);
+        protected static Integer P = Integer.Parse((BigInteger.Parse(BBSGenerator.hexP, NumberStyles.AllowHexSpecifier)).ToString());
+        protected static Integer Q = Integer.Parse((BigInteger.Parse(BBSGenerator.hexQ, NumberStyles.AllowHexSpecifier)).ToString());
 
-        protected static BigInteger N = P * Q;
+        protected static Integer N = P * Q;
 
 
-        private static BigInteger _r;
-        protected static BigInteger R 
+        private static Integer _r;
+        protected static Integer R 
         {
             get 
             {
-                _r = BigInteger.Pow(_r, 2) % N;
+                _r = _r.ModPow(2, N);
                 return _r;
             }
             set 
@@ -29,10 +31,10 @@ namespace AsymmetricCryptography.Generators.BBSGenerators
             }
         }
 
-        public static BigInteger RandomIntegerAbove(BigInteger a) 
+        public static Integer RandomIntegerAbove(Integer a) 
         {
             byte[] bytes = N.ToByteArray ();
-            BigInteger R;
+            Integer R;
 
             Random random = new Random();
 
@@ -40,7 +42,7 @@ namespace AsymmetricCryptography.Generators.BBSGenerators
             {
                 random.NextBytes (bytes);
                 bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
-                R = new BigInteger (bytes);
+                R = Integer.Parse((new BigInteger (bytes)).ToString());
             } while (!(a <= R));
 
             return R;

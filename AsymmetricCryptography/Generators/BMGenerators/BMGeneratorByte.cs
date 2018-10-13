@@ -1,20 +1,36 @@
 using System;
 using System.Text;
 using System.Numerics;
+using System.Diagnostics;
+using NeinMath;
 
-namespace AsymmetricCryptography.Generators.BMGenerators
+namespace Generators.src.BMGenerators
 {
     public class BMGeneratorByte: BMGenerator
     {
+
+        private static Stopwatch stopwatch = new Stopwatch();
+        private const String Path = "./generated/BMGeneratorByteOut.txt";
+
         public static void Result(int size)
         {
-            BigInteger p = RandomIntegerBetween(0, P);
-            Byte[] byteResult = GenerateSequence(p, size);
+            double bTime, cTime;
+
+            Integer seed = RandomIntegerBetween(0, P);
+
+            Byte[] byteResult = GenerateSequence(seed, size);
+            bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
+
+            stopwatch.Restart();
+            WriteToFile(Path, ConvertForOut(byteResult), seed);
+            stopwatch.Stop();
+            cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
 
             Console.WriteLine("\nBlum–Micali BYTE generator" +
-            "\nbase: " + A + "\nexponent (seed): " + p + "\nmodulus: " + P +
-            "\n\n" + ConvertForOut(byteResult) + "\n");
-        }
+            "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
+            "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
+            "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
+            }
 
         public static String ConvertForOut(Byte[] bytes)
         {
@@ -25,16 +41,17 @@ namespace AsymmetricCryptography.Generators.BMGenerators
             foreach(char ch in hexResult.ToCharArray())
             {
                 sb.Append(ch);
+                if (count == hexResult.Length - 1) break;
                 if (count % 2 == 1) sb.Append(" ");
-                if (count % 64 == 1 && count != 1) sb.Append("\n");
                 count++;
             }
 
             return sb.ToString();
         }
 
-        public static Byte[] GenerateSequence(BigInteger seed, int size)
+        public static Byte[] GenerateSequence(Integer seed, int size)
         {
+            stopwatch.Start();
             Byte[] byteArrayRes = new Byte[size];
             byteArrayRes[0] = (byte)(int)((seed * 256) / (P - 1));
 			T = seed;
