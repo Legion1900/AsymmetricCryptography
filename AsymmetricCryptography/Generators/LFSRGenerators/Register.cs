@@ -11,6 +11,9 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
         
         protected Register(long seed, int length)
         {
+            if (seed == 0)
+                throw new ArgumentOutOfRangeException(nameof(seed), "Seed must be non-zero");
+            
             // Maximum value that can be represented through length-bits
             var m = (long)Math.Pow(2, length) - 1;
             seed %= m + 1;
