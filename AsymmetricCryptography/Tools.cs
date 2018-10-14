@@ -79,5 +79,15 @@ namespace AsymmetricCryptography
             var bytesToString = BitConverter.ToString(bytes);
             return bytesToString.Split('-');
         }
+
+        public static Byte[] ToByteArray (BitArray bits){
+            if (bits.Count % 8 != 0){
+                throw new ArgumentOutOfRangeException(nameof(bits), "BitArray length isn't a multiple of 8.");
+            }
+            var bytes = new byte [bits.Count / 8];
+            Reverse(bits).CopyTo(bytes, 0);
+
+            return bytes;
+        }
     }
 }
