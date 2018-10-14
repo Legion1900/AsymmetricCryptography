@@ -52,8 +52,6 @@ namespace AsymmetricCryptography.Generators.LFSRGenerators
                 bytes[i] = Tools.ToByte(RandomBits(8));
             }
 
-            Console.WriteLine("Geffe output: {0}", Convert.ToString(bytes[0], 2));
-
             return bytes;
         }
 
