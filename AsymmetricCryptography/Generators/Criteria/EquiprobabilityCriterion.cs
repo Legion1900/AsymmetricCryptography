@@ -34,11 +34,6 @@ namespace AsymmetricCryptography.Generators.Criteria
                 // "\nMath.Pow((v - n), 2) / n = " + (Math.Pow((v - n), 2) / n));
             }
 
-            Console.WriteLine
-            ("\nn = " + n +
-            "\nTotal number of bytes (just to check): " + intCount + 
-            "\nChi squared: " + (double) count);
-
             return count;
         }
 
