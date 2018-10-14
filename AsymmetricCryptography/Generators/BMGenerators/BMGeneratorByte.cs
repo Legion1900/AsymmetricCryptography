@@ -3,9 +3,9 @@ using System.Text;
 using System.Numerics;
 using System.Diagnostics;
 using NeinMath;
-using AsymmetricCryptography.Generators.Criteria;
+using Generators.src.Criteria;
 
-namespace AsymmetricCryptography.Generators.BMGenerators
+namespace Generators.src.BMGenerators
 {
     public class BMGeneratorByte: BMGenerator
     {
@@ -13,45 +13,55 @@ namespace AsymmetricCryptography.Generators.BMGenerators
         private static Stopwatch stopwatch = new Stopwatch();
         private const String Path = "./generated/BMGeneratorByteOut.txt";
 
-        public static String Result(int size)
+        private readonly Integer seed;
+        override public string Seed
         {
-            double bTime, cTime;
-
-            Integer seed = RandomIntegerBetween(0, P);
-
-            Byte[] byteResult = GenerateSequence(seed, size);
-            bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
-
-            stopwatch.Restart();
-            String output = ConvertForOut(byteResult);
-            
-            WriteToFile(Path, output, seed);
-            stopwatch.Stop();
-            cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
-
-            Console.WriteLine("\nBlum–Micali BYTE generator" +
-            "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
-            "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
-            "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
-
-            return output;
+            get{return seed.ToString();}
         }
 
-        public static String ConvertForOut(Byte[] bytes)
-        {
-            String hexResult = BitConverter.ToString(bytes).Replace("-", string.Empty);
-            StringBuilder sb = new StringBuilder();
-            int count = 0;
+        // public static String Result(int size)
+        // {
+        //     double bTime, cTime;
 
-            foreach(char ch in hexResult.ToCharArray())
+        //     Byte[] byteResult = GenerateSequence(seed, size);
+        //     bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
+
+        //     stopwatch.Restart();
+        //     String output = Tools.ByteArrToString(byteResult);
+            
+        //     WriteToFile(Path, output, seed);
+        //     stopwatch.Stop();
+        //     cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
+
+        //     Console.WriteLine("\nBlum–Micali BYTE generator" +
+        //     "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
+        //     "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
+        //     "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
+
+        //     return output;
+        // }
+
+        
+        public BMGeneratorByte(Integer? seed) {
+            if (seed == null)
             {
-                sb.Append(ch);
-                if (count == hexResult.Length - 1) break;
-                if (count % 2 == 1) sb.Append(" ");
-                count++;
+                this.seed = RandomIntegerBetween(0, P);
+            } 
+            else
+            {
+                this.seed = seed.Value;
             }
+        }
 
-            return sb.ToString();
+        override public Byte[] RandomBytes(int size){
+            if (seed == 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            
+            Byte[] byteResult = GenerateSequence(seed, size);
+
+            return byteResult;
         }
 
         public static Byte[] GenerateSequence(Integer seed, int size)

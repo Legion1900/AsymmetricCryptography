@@ -1,13 +1,14 @@
 using System;
 using System.Numerics;
+using System.Collections;
 using System.Globalization;
 using System.Diagnostics;
 using NeinMath;
 
 
-namespace AsymmetricCryptography.Generators.BMGenerators
+namespace Generators.src.BMGenerators
 {
-    public class BMGenerator 
+    public abstract class BMGenerator : IGenerator
     {
 
         // hex values of p, a and q, where p = 2*q + 1
@@ -50,8 +51,18 @@ namespace AsymmetricCryptography.Generators.BMGenerators
             return R;
         }
 
-        public static void WriteToFile(string path, string contents, Integer seed){
+        public static void WriteToFile(string path, string contents, Integer seed)
+        {
             System.IO.File.WriteAllText (path, (contents + "\nseed:" + seed.ToString()));
         }
+
+        BitArray IGenerator.RandomBits(int n)
+        {
+            throw new NotImplementedException();
+        }
+
+        abstract public string Seed {get;}
+
+        public abstract byte[] RandomBytes(int size);
     }
 }

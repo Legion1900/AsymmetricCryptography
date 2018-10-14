@@ -1,12 +1,13 @@
 using System;
 using System.Numerics;
+using System.Collections;
 using System.Globalization;
 using NeinMath;
 
 
-namespace AsymmetricCryptography.Generators.BBSGenerators
+namespace Generators.src.BBSGenerators
 {
-    public class BBSGenerator
+    public abstract class BBSGenerator : IGenerator
     {
         private const String hexP = "0D5BBB96D30086EC484EBA3D7F9CAEB07";
         private const String hexQ = "0425D2B9BFDB25B9CF6C416CC6E37B59C1F";
@@ -47,5 +48,14 @@ namespace AsymmetricCryptography.Generators.BBSGenerators
 
             return R;
         }
+
+        BitArray IGenerator.RandomBits(int n)
+        {
+            throw new NotImplementedException();
+        }
+
+        abstract public string Seed {get;}
+
+        public abstract byte[] RandomBytes(int size);
     }
 }

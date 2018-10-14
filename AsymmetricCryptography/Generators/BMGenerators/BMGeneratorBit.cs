@@ -4,9 +4,9 @@ using System.Numerics;
 using System.Collections;
 using System.Diagnostics;
 using NeinMath;
-using AsymmetricCryptography.Generators.Criteria;
+using Generators.src.Criteria;
 
-namespace AsymmetricCryptography.Generators.BMGenerators
+namespace Generators.src.BMGenerators
 {
     public class BMGeneratorBit: BMGenerator
     {
@@ -14,31 +14,57 @@ namespace AsymmetricCryptography.Generators.BMGenerators
         private static Stopwatch stopwatch = new Stopwatch();
         private const String Path = "./generated/BMGeneratorBitOut.txt";
 
-        public static String Result(int size)
+        private readonly Integer seed;
+        override public string Seed
         {
-            double bTime, cTime;
+            get{return seed.ToString();}
+        }
 
-			Integer seed = RandomIntegerBetween(0, P);
+        // public static String Result(int size)
+        // {
+        //     double bTime, cTime;
             
-			BitArray bitRes = GenerateSequence(seed, size);
-            // stopwatch is restarted inside of GenerateSequence(p, size) function
-            bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
+		// 	BitArray bitRes = GenerateSequence(seed, size);
+        //     // stopwatch is restarted inside of GenerateSequence(p, size) function
+        //     bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
 
-            stopwatch.Restart();
-            String output = BitToString(bitRes);
+        //     stopwatch.Restart();
+        //     String output = BitToString(bitRes);
 
-            WriteToFile(Path, output, seed);
-            stopwatch.Stop();
-            cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
+        //     WriteToFile(Path, output, seed);
+        //     stopwatch.Stop();
+        //     cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
             
-            Console.WriteLine
-            ("\nBlum–Micali BIT generator" + 
-            "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
-            "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
-            "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
+        //     Console.WriteLine
+        //     ("\nBlum–Micali BIT generator" + 
+        //     "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
+        //     "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
+        //     "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
 
-            return output;
-	    }
+        //     return output;
+	    // }
+
+        public BMGeneratorBit(Integer? seed) {
+            if (seed == null)
+            {
+                this.seed = RandomIntegerBetween(0, P);
+            } 
+            else
+            {
+                this.seed = seed.Value;
+            }
+        }
+
+        override public Byte[] RandomBytes(int size){
+            if (seed == 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            
+            BitArray bitRes = GenerateSequence(seed, size);
+
+            return Tools.ToByteArray(bitRes);
+        }
 
         public static String BitToString(BitArray bitArray)
         {
