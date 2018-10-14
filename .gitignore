@@ -5,3 +5,8 @@ obj/
 *.sln
 *.csproj
 *.user
+*.config
+*.nupkg
+*.p7s
+*.dll
+*.xml
