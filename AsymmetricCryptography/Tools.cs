@@ -20,6 +20,13 @@ namespace AsymmetricCryptography
             return builder.ToString();
         }
 
+        public static String ByteArrToString(Byte[] bytes)
+        {
+            String hexResult = BitConverter.ToString(bytes).Replace("-", " ");
+
+            return hexResult;
+        }
+
         public static byte ToByte(BitArray bits)
         {
             if (bits.Count > 8)
