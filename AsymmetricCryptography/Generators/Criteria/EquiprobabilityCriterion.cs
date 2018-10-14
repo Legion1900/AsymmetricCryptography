@@ -12,19 +12,8 @@ namespace AsymmetricCryptography.Generators.Criteria
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             // generating 256 byte array, converting it to string
             
-            String bytesToString;
-
-            Byte[] bytes = new byte[256];
-
-            for (Byte b = 0; ; b++)
-            {
-                bytes[b] = b;
-
-                if (b == 255) break;
-            }
-
-            bytesToString = BitConverter.ToString(bytes);
-            String[] bytesPatternArray = bytesToString.Split('-');
+            
+            String[] bytesPatternArray = Tools.GenerateByteAlphabet();
 
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

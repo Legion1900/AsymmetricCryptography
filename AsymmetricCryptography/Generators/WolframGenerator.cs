@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
-using Generators.src.BMGenerators;
 
-namespace Generators.src
+namespace AsymmetricCryptography.Generators
 {
     public class WolframGenerator : IGenerator
     {

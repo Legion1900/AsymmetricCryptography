@@ -2,8 +2,8 @@ using System;
 using System.Text;
 using System.Numerics;
 using System.Diagnostics;
+using AsymmetricCryptography.Generators.BMGenerators;
 using NeinMath;
-using Generators.src.Criteria;
 
 namespace Generators.src.BMGenerators
 {

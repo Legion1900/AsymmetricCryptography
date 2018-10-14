@@ -1,11 +1,10 @@
 using System;
-using System.Numerics;
 using System.Collections;
 using System.Globalization;
+using System.Numerics;
 using NeinMath;
 
-
-namespace Generators.src.BBSGenerators
+namespace AsymmetricCryptography.Generators.BBSGenerators
 {
     public abstract class BBSGenerator : IGenerator
     {
