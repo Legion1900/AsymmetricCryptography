@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Net;
 using System.Text;
 
 namespace AsymmetricCryptography
@@ -20,7 +21,7 @@ namespace AsymmetricCryptography
             return builder.ToString();
         }
 
-        public static String ByteArrToString(Byte[] bytes)
+        public static string ToString(Byte[] bytes)
         {
             String hexResult = BitConverter.ToString(bytes).Replace("-", " ");
 
@@ -63,6 +64,20 @@ namespace AsymmetricCryptography
             }
 
             return output;
+        }
+
+        public static string[] GenerateByteAlphabet()
+        {
+            var bytes = new byte[256];
+            for (Byte b = 0; ; b++)
+            {
+                bytes[b] = b;
+
+                if (b == 255) break;
+            }
+
+            var bytesToString = BitConverter.ToString(bytes);
+            return bytesToString.Split('-');
         }
     }
 }
