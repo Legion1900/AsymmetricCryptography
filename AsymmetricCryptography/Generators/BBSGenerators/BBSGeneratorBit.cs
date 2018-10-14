@@ -2,11 +2,11 @@ using System;
 using System.Numerics;
 using System.Collections;
 using System.Diagnostics;
-using Generators.src.BMGenerators;
+using AsymmetricCryptography.Generators.BMGenerators;
 using NeinMath;
 
 
-namespace Generators.src.BBSGenerators
+namespace AsymmetricCryptography.Generators.BBSGenerators
 {
     public class BBSGeneratorBit: BBSGenerator
     {
@@ -14,7 +14,7 @@ namespace Generators.src.BBSGenerators
         private static Stopwatch stopwatch = new Stopwatch();
         private const String Path = "./generated/BBSGeneratorBitOut.txt";
 
-        public static void Result(int size)
+        public static String Result(int size)
         {
             double bTime, cTime;
 
@@ -24,7 +24,9 @@ namespace Generators.src.BBSGenerators
             bTime = (double) stopwatch.ElapsedMilliseconds / 1000;
 
             stopwatch.Restart();
-            BMGeneratorBit.WriteToFile(Path, BMGeneratorBit.BitToString(bitRes), seed);
+            String output = BMGeneratorBit.BitToString(bitRes);
+
+            BMGeneratorBit.WriteToFile(Path, output, seed);
             stopwatch.Stop();
             cTime = (double) stopwatch.ElapsedMilliseconds / 1000;
 
@@ -33,6 +35,7 @@ namespace Generators.src.BBSGenerators
             "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
             "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
 
+            return output;
         }
 
         public static BitArray GenerateSequence(Integer seed, int size)

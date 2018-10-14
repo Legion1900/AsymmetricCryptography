@@ -4,7 +4,7 @@ using System.Globalization;
 using NeinMath;
 
 
-namespace Generators.src.BBSGenerators
+namespace AsymmetricCryptography.Generators.BBSGenerators
 {
     public class BBSGenerator
     {

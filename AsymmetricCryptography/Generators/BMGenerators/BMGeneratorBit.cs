@@ -4,8 +4,9 @@ using System.Numerics;
 using System.Collections;
 using System.Diagnostics;
 using NeinMath;
+using AsymmetricCryptography.Generators.Criteria;
 
-namespace Generators.src.BMGenerators
+namespace AsymmetricCryptography.Generators.BMGenerators
 {
     public class BMGeneratorBit: BMGenerator
     {
@@ -13,7 +14,7 @@ namespace Generators.src.BMGenerators
         private static Stopwatch stopwatch = new Stopwatch();
         private const String Path = "./generated/BMGeneratorBitOut.txt";
 
-        public static void Result(int size)
+        public static String Result(int size)
         {
             double bTime, cTime;
 
@@ -24,16 +25,19 @@ namespace Generators.src.BMGenerators
             bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
 
             stopwatch.Restart();
-            WriteToFile(Path, BitToString(bitRes), seed);
+            String output = BitToString(bitRes);
+
+            WriteToFile(Path, output, seed);
             stopwatch.Stop();
             cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
             
-
             Console.WriteLine
             ("\nBlum–Micali BIT generator" + 
             "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
             "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
             "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
+
+            return output;
 	    }
 
         public static String BitToString(BitArray bitArray)

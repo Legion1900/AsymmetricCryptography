@@ -5,7 +5,7 @@ using System.Diagnostics;
 using NeinMath;
 
 
-namespace Generators.src.BMGenerators
+namespace AsymmetricCryptography.Generators.BMGenerators
 {
     public class BMGenerator 
     {

@@ -3,8 +3,9 @@ using System.Text;
 using System.Numerics;
 using System.Diagnostics;
 using NeinMath;
+using AsymmetricCryptography.Generators.Criteria;
 
-namespace Generators.src.BMGenerators
+namespace AsymmetricCryptography.Generators.BMGenerators
 {
     public class BMGeneratorByte: BMGenerator
     {
@@ -12,7 +13,7 @@ namespace Generators.src.BMGenerators
         private static Stopwatch stopwatch = new Stopwatch();
         private const String Path = "./generated/BMGeneratorByteOut.txt";
 
-        public static void Result(int size)
+        public static String Result(int size)
         {
             double bTime, cTime;
 
@@ -22,7 +23,9 @@ namespace Generators.src.BMGenerators
             bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
 
             stopwatch.Restart();
-            WriteToFile(Path, ConvertForOut(byteResult), seed);
+            String output = ConvertForOut(byteResult);
+            
+            WriteToFile(Path, output, seed);
             stopwatch.Stop();
             cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
 
@@ -30,7 +33,9 @@ namespace Generators.src.BMGenerators
             "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
             "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
             "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
-            }
+
+            return output;
+        }
 
         public static String ConvertForOut(Byte[] bytes)
         {
