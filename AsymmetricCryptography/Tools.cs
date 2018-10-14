@@ -89,5 +89,20 @@ namespace AsymmetricCryptography
 
             return bytes;
         }
+
+        public static BitArray Reverse(BitArray array)
+        {
+            int length = array.Length;
+            int mid = (length / 2);
+
+            for (int i = 0; i < mid; i++)
+            {
+                bool bit = array[i];
+                array[i] = array[length - i - 1];
+                array[length - i - 1] = bit;
+            }    
+
+            return array;
+        }
     }
 }
