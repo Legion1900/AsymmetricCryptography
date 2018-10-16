@@ -1,10 +1,11 @@
+using System;
 using System.Numerics;
 
 namespace AsymmetricCryptography.Generators.LehmerGenerators
 {
     public class LehmerLow : LehmerGenerator
     {
-        public LehmerLow(BigInteger seed) : base(seed)
+        public LehmerLow(uint seed) : base(seed)
         {}
        
         public override byte[] RandomBytes(int n)
@@ -12,7 +13,8 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
             var output = new byte[n];
             for (int i = 0; i < n; i++)
             {
-                output[i] = X.ToByteArray()[0];
+//                output[i] = X.ToByteArray()[0];
+                output[i] = BitConverter.GetBytes(X)[0];
             }
 
             return output;

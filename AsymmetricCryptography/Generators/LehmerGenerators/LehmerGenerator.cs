@@ -6,19 +6,19 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
 {
     public abstract class LehmerGenerator : IGenerator
     {
-        private static readonly BigInteger A = BigInteger.Pow(2, 16) + 1;
-        private static readonly BigInteger M = BigInteger.Pow(2, 32);
+        private static readonly uint A = (uint)Math.Pow(2, 16) + 1;
+        private static readonly long M = (long)Math.Pow(2, 32);
         private const int C = 119;
 
-        private BigInteger _x;
+        private uint _x;
 
         public string Seed { get; }
 
-        protected BigInteger X
+        protected uint X
         {
             get
             {
-                X = (A * _x + C) % M;
+                X = (uint)((A * _x + C) % M);
                 return _x;
             }
             private set
@@ -29,7 +29,7 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
             }
         }
 
-        protected LehmerGenerator(BigInteger seed)
+        protected LehmerGenerator(uint seed)
         {
             X = seed;
             Seed = seed.ToString();
