@@ -18,8 +18,9 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         {
             get
             {
-                X = (uint)((A * _x + C) % M);
-                return _x;
+                uint tmp = _x;
+                Next();
+                return tmp;
             }
             private set
             {
@@ -36,6 +37,11 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         }
 
         public abstract byte[] RandomBytes(int n);
+
+        private void Next()
+        {
+            X = (uint)((A * _x + C) % M);
+        }
 
         BitArray IGenerator.RandomBits(int n)
         {
