@@ -4,11 +4,10 @@ using System.Collections;
 using System.Diagnostics;
 using AsymmetricCryptography;
 using AsymmetricCryptography.Generators.BBSGenerators;
-using Generators.src.BMGenerators;
 using NeinMath;
 
 
-namespace Generators.src.BBSGenerators
+namespace AsymmetricCryptography.Generators.BBSGenerators
 {
     public class BBSGeneratorBit: BBSGenerator
     {
@@ -22,32 +21,10 @@ namespace Generators.src.BBSGenerators
             get{return seed.ToString();}
         }
 
-        // public static String Result(int size)
-        // {
-        //     double bTime, cTime;
-
-        //     BitArray bitRes = GenerateSequence(seed, size);
-        //     bTime = (double) stopwatch.ElapsedMilliseconds / 1000;
-
-        //     stopwatch.Restart();
-        //     String output = BMGeneratorBit.BitToString(bitRes);
-
-        //     BMGeneratorBit.WriteToFile(Path, output, seed);
-        //     stopwatch.Stop();
-        //     cTime = (double) stopwatch.ElapsedMilliseconds / 1000;
-
-        //     Console.WriteLine("\nBlum–Blum–Shub BITE generator" + 
-        //     "\nbase (seed): " + seed + "\nmodulus: " + N + 
-        //     "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
-        //     "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
-
-        //     return output;
-        // }
-
         public BBSGeneratorBit(Integer? seed) {
             if (seed == null)
             {
-                this.seed = RandomIntegerAbove(2);
+                this.seed = Tools.RandomInteger(2);
             } 
             else
             {

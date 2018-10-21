@@ -18,34 +18,10 @@ namespace AsymmetricCryptography.Generators.BMGenerators
             get{return seed.ToString();}
         }
 
-        // public static String Result(int size)
-        // {
-        //     double bTime, cTime;
-            
-		// 	BitArray bitRes = GenerateSequence(seed, size);
-        //     // stopwatch is restarted inside of GenerateSequence(p, size) function
-        //     bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
-
-        //     stopwatch.Restart();
-        //     String output = BitToString(bitRes);
-
-        //     WriteToFile(Path, output, seed);
-        //     stopwatch.Stop();
-        //     cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
-            
-        //     Console.WriteLine
-        //     ("\nBlum–Micali BIT generator" + 
-        //     "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
-        //     "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
-        //     "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
-
-        //     return output;
-	    // }
-
         public BMGeneratorBit(Integer? seed) {
             if (seed == null)
             {
-                this.seed = RandomIntegerBetween(0, P);
+                this.seed = Tools.RandomInteger(0, P);
             } 
             else
             {

@@ -5,8 +5,7 @@ using AsymmetricCryptography.Generators.BMGenerators;
 using AsymmetricCryptography.Generators.Criteria;
 using AsymmetricCryptography.Generators.LehmerGenerators;
 using AsymmetricCryptography.Generators.LFSRGenerators;
-using Generators.src.BBSGenerators;
-using Generators.src.BMGenerators;
+using AsymmetricCryptography.Generators.BBSGenerators;
 
 namespace AsymmetricCryptography
 {
@@ -38,16 +37,16 @@ namespace AsymmetricCryptography
             }
             
             var seed = 636746134997083034;
-            var librarianSeed = File.ReadAllText("C:\\Users\\Tyler\\Desktop\\seed.txt");
+            // var librarianSeed = File.ReadAllText("C:\\Users\\Tyler\\Desktop\\seed.txt");
 
             IGenerator[] generators =
             {
-                new LehmerLow(seed),
-                new LehmerHigh(seed),
+                new LehmerLow((uint)seed),
+                new LehmerHigh((uint)seed),
                 new L20(seed),
                 new L89(seed),
                 new GeffeGenerator(seed),
-                new Librarian(librarianSeed),
+                // new Librarian(librarianSeed),
                 new BMGeneratorBit(null),
                 new BMGeneratorByte(null),
                 new BBSGeneratorBit(null),
@@ -75,14 +74,14 @@ namespace AsymmetricCryptography
         {
             byte[] output;
             if (gen.GetType().Name == "Librarian")
-                output = gen.RandomBytes(10);
+                output = gen.RandomBytes(N);
             else
-                output = gen.RandomBytes(100);
+                output = gen.RandomBytes(N);
 
             string hexRes = BitConverter.ToString(output).Replace("-", " ");
                 
             Console.WriteLine("Name: {0}", gen.GetType().Name);
-            Console.WriteLine("Seed: {0}", gen.Seed);
+            // Console.WriteLine("Seed: {0}", gen.Seed);
             Console.WriteLine(hexRes);
             Console.WriteLine();
             Console.WriteLine("_______________________________");

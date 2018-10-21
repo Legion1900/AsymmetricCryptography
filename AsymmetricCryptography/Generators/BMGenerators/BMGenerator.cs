@@ -30,24 +30,6 @@ namespace AsymmetricCryptography.Generators.BMGenerators
 				_t = value; //use once for initialisation with seed
             }
         }
-    
-        // Fill a byte array of a size of a BigInteger with random bytes
-        public static Integer RandomIntegerBetween(Integer a, Integer b) 
-        {
-            byte[] bytes = b.ToByteArray ();
-            Integer R;
-
-            Random random = new Random();
-
-            do 
-            {
-                random.NextBytes (bytes);
-                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
-                R = Integer.Parse((new BigInteger (bytes)).ToString());
-            } while (!(a <= R && R <= b));
-
-            return R;
-        }
 
         public static void WriteToFile(string path, string contents, Integer seed)
         {

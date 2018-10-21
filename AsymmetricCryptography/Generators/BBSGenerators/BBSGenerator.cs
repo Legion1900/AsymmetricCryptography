@@ -31,22 +31,7 @@ namespace AsymmetricCryptography.Generators.BBSGenerators
             }
         }
 
-        public static Integer RandomIntegerAbove(Integer a) 
-        {
-            byte[] bytes = N.ToByteArray ();
-            Integer R;
-
-            Random random = new Random();
-
-            do 
-            {
-                random.NextBytes (bytes);
-                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
-                R = Integer.Parse((new BigInteger (bytes)).ToString());
-            } while (!(a <= R));
-
-            return R;
-        }
+        
 
         BitArray IGenerator.RandomBits(int n)
         {

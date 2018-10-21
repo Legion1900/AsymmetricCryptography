@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Net;
 using System.Text;
+using NeinMath;
+using System.Numerics;
 
 namespace AsymmetricCryptography
 {
@@ -103,6 +105,56 @@ namespace AsymmetricCryptography
             }    
 
             return array;
+        }
+
+
+        // ~~~RandomInteger() / (min) / (min, max) - returns random NeinMath Integer~~~
+
+        public static Integer RandomInteger(Integer a, Integer b) 
+        {
+            byte[] bytes = b.ToByteArray ();
+            Integer R;
+
+            Random random = new Random();
+
+            do 
+            {
+                random.NextBytes (bytes);
+                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
+                R = Integer.Parse((new BigInteger (bytes)).ToString());
+            } while (!(a <= R && R <= b));
+
+            return R;
+        }
+
+        public static Integer RandomInteger(Integer a) 
+        {
+            Random random = new Random();
+            byte[] bytes = new byte [random.Next(2, 64)];
+            Integer R;
+
+
+            do 
+            {
+                random.NextBytes (bytes);
+                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
+                R = Integer.Parse((new BigInteger (bytes)).ToString());
+            } while (!(a <= R));
+
+            return R;
+        }
+
+        public static Integer RandomInteger() 
+        {
+            Random random = new Random();
+            byte[] bytes = new byte[random.Next()];
+            Integer R;
+
+            random.NextBytes (bytes);
+            bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
+            R = Integer.Parse((new BigInteger (bytes)).ToString());
+
+            return R;
         }
     }
 }

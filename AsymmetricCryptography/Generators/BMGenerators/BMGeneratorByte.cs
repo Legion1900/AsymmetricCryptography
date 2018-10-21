@@ -5,7 +5,7 @@ using System.Diagnostics;
 using AsymmetricCryptography.Generators.BMGenerators;
 using NeinMath;
 
-namespace Generators.src.BMGenerators
+namespace AsymmetricCryptography.Generators.BMGenerators
 {
     public class BMGeneratorByte: BMGenerator
     {
@@ -18,34 +18,11 @@ namespace Generators.src.BMGenerators
         {
             get{return seed.ToString();}
         }
-
-        // public static String Result(int size)
-        // {
-        //     double bTime, cTime;
-
-        //     Byte[] byteResult = GenerateSequence(seed, size);
-        //     bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
-
-        //     stopwatch.Restart();
-        //     String output = Tools.ByteArrToString(byteResult);
-            
-        //     WriteToFile(Path, output, seed);
-        //     stopwatch.Stop();
-        //     cTime = (double)stopwatch.ElapsedMilliseconds / 1000;
-
-        //     Console.WriteLine("\nBlum–Micali BYTE generator" +
-        //     "\nbase: " + A + "\nexponent (seed): " + seed + "\nmodulus: " + P +
-        //     "\nTime elapsed for sequence generation: " + bTime + " seconds" + 
-        //     "\nTime elapsed for converting to string and writing to file: " + cTime + " seconds");
-
-        //     return output;
-        // }
-
         
         public BMGeneratorByte(Integer? seed) {
             if (seed == null)
             {
-                this.seed = RandomIntegerBetween(0, P);
+                this.seed = Tools.RandomInteger(0, P);
             } 
             else
             {
