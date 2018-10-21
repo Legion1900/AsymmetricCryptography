@@ -108,46 +108,11 @@ namespace AsymmetricCryptography
         }
 
 
-        // ~~~RandomInteger() / (min) / (min, max) - returns random NeinMath Integer~~~
-
-        public static Integer RandomInteger(Integer a, Integer b) 
-        {
-            byte[] bytes = b.ToByteArray ();
-            Integer R;
-
-            Random random = new Random();
-
-            do 
-            {
-                random.NextBytes (bytes);
-                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
-                R = Integer.Parse((new BigInteger (bytes)).ToString());
-            } while (!(a <= R && R <= b));
-
-            return R;
-        }
-
-        public static Integer RandomInteger(Integer a) 
-        {
-            Random random = new Random();
-            byte[] bytes = new byte [random.Next(2, 64)];
-            Integer R;
-
-
-            do 
-            {
-                random.NextBytes (bytes);
-                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
-                R = Integer.Parse((new BigInteger (bytes)).ToString());
-            } while (!(a <= R));
-
-            return R;
-        }
-
+        // ~~~RandomInteger: ()/(min)/(min, max) - returns random NeinMath Integer~~~ //
         public static Integer RandomInteger() 
         {
             Random random = new Random();
-            byte[] bytes = new byte[random.Next()];
+            byte[] bytes = new byte[random.Next(2, 64)];
             Integer R;
 
             random.NextBytes (bytes);
@@ -155,6 +120,46 @@ namespace AsymmetricCryptography
             R = Integer.Parse((new BigInteger (bytes)).ToString());
 
             return R;
+        }
+
+        public static Integer RandomInteger(Integer min) 
+        {
+            Random random = new Random();
+            byte[] bytes = new byte [random.Next(2, 64)];
+            Integer R;
+
+            do 
+            {
+                random.NextBytes (bytes);
+                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
+                R = Integer.Parse((new BigInteger (bytes)).ToString());
+            } while (!(min < R));
+
+            return R;
+        }
+
+        public static Integer RandomInteger(Integer min, Integer max) 
+        {
+            Random random = new Random();
+            byte[] bytes = max.ToByteArray ();
+            Integer R;
+
+            do 
+            {
+                random.NextBytes (bytes);
+                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
+                R = Integer.Parse((new BigInteger (bytes)).ToString());
+            } while (!(min < R && R < max));
+            return R;
+        }
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+        public static Integer GCD(Integer a, Integer b) 
+        {
+            if (b == 0) 
+                return a;
+            else
+                return GCD(b, a % b);
         }
     }
 }

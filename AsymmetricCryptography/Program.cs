@@ -6,6 +6,7 @@ using AsymmetricCryptography.Generators.Criteria;
 using AsymmetricCryptography.Generators.LehmerGenerators;
 using AsymmetricCryptography.Generators.LFSRGenerators;
 using AsymmetricCryptography.Generators.BBSGenerators;
+using AsymmetricCryptography.Encryption.PrimalityTests;
 
 namespace AsymmetricCryptography
 {
