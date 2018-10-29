@@ -22,7 +22,7 @@ namespace AsymmetricCryptography.Generators.BMGenerators
         public BMGeneratorBit(Integer? seed) {
             if (seed == null)
             {
-                this.seed = Tools.RandomInteger(0, P);
+                this.seed = MathI.RandomInteger(0, P);
             } 
             else
             {

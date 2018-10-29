@@ -21,8 +21,8 @@ namespace AsymmetricCryptography.Encryption.PrimalityTests
             
             while (k != 0)
             {
-                x = Tools.RandomInteger(1, p);
-                if (Tools.GCD(x, p) != 1) return false;
+                x = MathI.RandomInteger(1, p);
+                if (MathI.GCD(x, p) != 1) return false;
                 
                 modPow = x.ModPow(d, p);
                 if (modPow == 1 || modPow == p - 1) 
