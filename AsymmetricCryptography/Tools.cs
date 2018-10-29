@@ -161,5 +161,10 @@ namespace AsymmetricCryptography
             else
                 return GCD(b, a % b);
         }
+
+        public static void WriteToFile(string path, string contents, Integer seed)
+        {
+            System.IO.File.WriteAllText (path, (contents + "\nseed:" + seed.ToString()));
+        }
     }
 }

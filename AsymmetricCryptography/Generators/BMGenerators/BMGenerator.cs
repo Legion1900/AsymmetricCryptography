@@ -31,11 +31,6 @@ namespace AsymmetricCryptography.Generators.BMGenerators
             }
         }
 
-        public static void WriteToFile(string path, string contents, Integer seed)
-        {
-            System.IO.File.WriteAllText (path, (contents + "\nseed:" + seed.ToString()));
-        }
-
         BitArray IGenerator.RandomBits(int n)
         {
             throw new NotImplementedException();
