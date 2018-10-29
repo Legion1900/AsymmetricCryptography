@@ -1,4 +1,5 @@
 using System;
+using AsymmetricCryptography.Utils;
 using NeinMath;
 
 namespace AsymmetricCryptography.Encryption.PrimalityTests

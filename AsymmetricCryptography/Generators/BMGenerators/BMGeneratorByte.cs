@@ -3,6 +3,7 @@ using System.Text;
 using System.Numerics;
 using System.Diagnostics;
 using AsymmetricCryptography.Generators.BMGenerators;
+using AsymmetricCryptography.Utils;
 using NeinMath;
 
 namespace AsymmetricCryptography.Generators.BMGenerators

@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using AsymmetricCryptography.Utils;
+using Math = System.Math;
 
 namespace AsymmetricCryptography.Generators.LFSRGenerators
 {

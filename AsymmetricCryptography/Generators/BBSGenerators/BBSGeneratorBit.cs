@@ -4,6 +4,7 @@ using System.Collections;
 using System.Diagnostics;
 using AsymmetricCryptography;
 using AsymmetricCryptography.Generators.BBSGenerators;
+using AsymmetricCryptography.Utils;
 using NeinMath;
 
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Text;
+using AsymmetricCryptography.Utils;
 using NeinMath;
 
 namespace AsymmetricCryptography.Generators.BMGenerators

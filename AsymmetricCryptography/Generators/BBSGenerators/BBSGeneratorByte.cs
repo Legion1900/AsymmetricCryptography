@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using System.Diagnostics;
 using AsymmetricCryptography.Generators.BBSGenerators;
+using AsymmetricCryptography.Utils;
 using NeinMath;
 
 

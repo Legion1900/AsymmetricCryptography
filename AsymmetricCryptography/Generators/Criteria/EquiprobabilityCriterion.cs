@@ -1,5 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
+using AsymmetricCryptography.Utils;
+using Math = System.Math;
 
 namespace AsymmetricCryptography.Generators.Criteria
 {

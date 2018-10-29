@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
-using System.Net;
+using System.Numerics;
 using System.Text;
 using NeinMath;
-using System.Numerics;
 
-namespace AsymmetricCryptography
+namespace AsymmetricCryptography.Utils
 {
     public static class Tools
     {
@@ -151,15 +150,6 @@ namespace AsymmetricCryptography
                 R = Integer.Parse((new BigInteger (bytes)).ToString());
             } while (!(min < R && R < max));
             return R;
-        }
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-        public static Integer GCD(Integer a, Integer b) 
-        {
-            if (b == 0) 
-                return a;
-            else
-                return GCD(b, a % b);
         }
 
         public static void WriteToFile(string path, string contents, Integer seed)
