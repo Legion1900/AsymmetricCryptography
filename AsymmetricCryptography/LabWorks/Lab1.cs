@@ -9,7 +9,7 @@ using AsymmetricCryptography.Utils;
 
 namespace AsymmetricCryptography.LabWorks
 {
-    public static class Program
+    public static class Lab1
     {
         private const int N = 125000;
         private static double[] Alpha = 
