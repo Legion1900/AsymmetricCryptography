@@ -18,10 +18,12 @@ namespace AsymmetricCryptography.Cryptosystems
 
         // }
 
-        // public Integer Encrypt(Integer m)
-        // {
-
-        // }
+        // *! Fix list of parameters according fo class fields
+        public Integer Encrypt(Integer m, ValueTuple<Integer, Integer> publicKey)
+        {
+            System.Console.WriteLine("{0} ^ {1} mod {2}", m, publicKey.Item1, publicKey.Item2);
+            return m.ModPow(publicKey.Item1, publicKey.Item2);
+        }
 
         // public Integer Decrypt(Integer c)
         // {
