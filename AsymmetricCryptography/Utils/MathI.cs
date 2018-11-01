@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Numerics;
 using System.Globalization;
 using NeinMath;
@@ -81,24 +82,34 @@ namespace AsymmetricCryptography.Utils
             return random;
         }
 
-        public static int[] GeneratePrimes(int n)
+        public static void GeneratePrimes(int n)
         {
-            int[] arr = new int[n];
-
             int i = 1, j = 3;
-            arr[0] = 2;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(2);
+            sb.Append(' ');
 
             while (i < n)
             {
                 if(PrimalityTests.MillerRabin(j))
                 {
-                    arr[i] = j;
-                    i++;
+                    if(i == n - 1){
+                        sb.Append(j);
+                        System.Console.WriteLine("help");
+                        i++;
+                    }
+                    else
+                    {
+                        sb.Append(j);
+                        sb.Append(' ');
+                        i++;
+                    }
                 }    
                 j++;
             }
 
-            return arr;
+            System.IO.File.WriteAllText("./Generated/primes.txt", sb.ToString());
         }
 
         // GenerateStrongPrime(int n) - where n is number of bits in a generated prime number

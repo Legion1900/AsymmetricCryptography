@@ -108,7 +108,7 @@ namespace AsymmetricCryptography.Utils
 
         public static void WriteToFile(string path, string contents, Integer seed)
         {
-            System.IO.File.WriteAllText (path, (contents + "\nseed:" + seed.ToString()));
+            System.IO.File.WriteAllText(path, (contents + "\nseed:" + seed.ToString()));
         }
     }
 }

@@ -8,13 +8,22 @@ namespace AsymmetricCryptography.LabWorks
     {
         public static void Main()
         {
+            // MathI.GeneratePrimes(500);
             var stopwatch = new Stopwatch();
-            for(int i = 0; i < 40; i++)
+            double a, b = 0;
+            for(int j = 1; j < 11; j++)
             {
-                stopwatch.Restart();
-                MathI.GeneratePrime(32);
-                System.Console.WriteLine((double)stopwatch.ElapsedMilliseconds / 1000 + " seconds");
+                a = 0;
+                for (int i = 0; i < 20; i++)
+                {
+                    stopwatch.Restart();
+                    MathI.GeneratePrime(32);
+                    a += (double)stopwatch.ElapsedMilliseconds / 1000;
+                }
+                System.Console.WriteLine(j + " instance took " + a / 10 + " seconds to generate.");
+                b += a;
             }
+            System.Console.WriteLine();
         }
     }
 }
