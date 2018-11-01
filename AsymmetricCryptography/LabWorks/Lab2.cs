@@ -1,29 +1,23 @@
 using System;
 using System.Diagnostics;
+using NeinMath;
 using AsymmetricCryptography.Utils;
+using AsymmetricCryptography.Cryptosystems;
 
 namespace AsymmetricCryptography.LabWorks
 {
     public static class Lab2
     {
+        public static (Integer a, Integer b) tuple;
         public static void Main()
         {
-            // MathI.GeneratePrimes(500);
-            var stopwatch = new Stopwatch();
-            double a, b = 0;
-            for(int j = 1; j < 11; j++)
-            {
-                a = 0;
-                for (int i = 0; i < 20; i++)
-                {
-                    stopwatch.Restart();
-                    MathI.GeneratePrime(32);
-                    a += (double)stopwatch.ElapsedMilliseconds / 1000;
-                }
-                System.Console.WriteLine(j + " instance took " + a / 10 + " seconds to generate.");
-                b += a;
-            }
-            System.Console.WriteLine();
+            var m = MathI.GenerateStrongPrime(32);
+            var rsa  = new RSA();
+            rsa.ExternalPublicKey = rsa.InternalPublicKey;
+            var signedM = rsa.Sign(m);
+            
+            System.Console.WriteLine($"(e, n){rsa.InternalPublicKey} \nm: {m} \n(m, s): {signedM}");
+            System.Console.WriteLine(rsa.Verify(signedM));
         }
     }
 }

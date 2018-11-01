@@ -9,37 +9,35 @@ namespace AsymmetricCryptography.Cryptosystems
         // Private key
         private Integer d;
 
-        private (Integer e, Integer n) externalPublicKey;
+        public (Integer e, Integer n) ExternalPublicKey
+        {
+            set;
+            get;
+        }
 
         //* This public property is used instead of SendKey method
-        public (Integer e, Integer n) PublicKey
+        public (Integer e, Integer n) InternalPublicKey
         {
             private set;
             get;
         }
 
-        public RSA(Integer p, Integer q, Integer e)
+        public RSA()
         {
-            if (!PrimalityTests.MillerRabin(p) || !PrimalityTests.MillerRabin(q))
-                throw new ArgumentException("p and q must be prime numbers");
-
-            var n = p * q;
-            var euler = (p - 1) * (q - 1);
-            if (MathI.GCD(e, euler) != 1)
-                throw new ArgumentException("Euler(p * q) should be mutually simple with e");
-            d = e.ModInv(euler);
-            PublicKey = new ValueTuple<Integer, Integer>(e, n);
+            GenerateKeyPair();
         }
 
-        // public bool ReceiveKey((Integer e, Integer n) publicKey)
-        // {
+        private void GenerateKeyPair()
+        {
+            Integer p = MathI.GenerateStrongPrime(32),
+                q = MathI.GenerateStrongPrime(32),
+                n = p * q,
+                e = (int)Math.Pow(2, 16) + 1,
+                euler = (p - 1) * (q - 1);
 
-        // }
-
-        // private ValueTuple<Integer, Integer> GenerateKeyPair()
-        // {
-
-        // }
+            d = e.ModInv(euler);
+            InternalPublicKey = (e, n);
+        }
 
         public Integer Encrypt(Integer m, (Integer e, Integer n) publicKey)
         {
@@ -49,15 +47,27 @@ namespace AsymmetricCryptography.Cryptosystems
         // Integer c -- encrypted message C
         public Integer Decrypt(Integer c)
         {
-            return c.ModPow(d, PublicKey.n);
+            return c.ModPow(d, InternalPublicKey.n);
         }
 
         //*? How should Sign signature look like?
 
-        //*? Should it be private? And what parameters should it accept
-        // private bool Verify()
-        // {
+        public (Integer m, Integer s) Sign(Integer m)
+        {
+            return (m, Encrypt(m, (d, InternalPublicKey.n)));
+        }
 
-        // }
+        //*? Should it be private? And what parameters should it accept
+        public bool Verify((Integer m, Integer s) signMessage)
+        {
+            if (ExternalPublicKey.Equals((0, 0)))
+            {
+                throw  new InvalidOperationException("ExternalPublicKey has not been set!");
+            }
+
+            var m = signMessage.s.ModPow(ExternalPublicKey.e, ExternalPublicKey.n);
+
+            return (signMessage.m == m);
+        }
     }
 }
