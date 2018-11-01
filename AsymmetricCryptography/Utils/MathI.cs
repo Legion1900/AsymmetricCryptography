@@ -1,6 +1,8 @@
 using System;
 using System.Numerics;
+using System.Globalization;
 using NeinMath;
+using AsymmetricCryptography.Generators.LehmerGenerators;
 
 namespace AsymmetricCryptography.Utils
 {
@@ -15,7 +17,7 @@ namespace AsymmetricCryptography.Utils
         }
 
         // ~~~RandomInteger: ()/(min)/(min, max) - returns random NeinMath Integer~~~ //
-        public static Integer RandomInteger() 
+        public static Integer RandomI() 
         {
             Random random = new Random();
             byte[] bytes = new byte[random.Next(2, 64)];
@@ -28,7 +30,7 @@ namespace AsymmetricCryptography.Utils
             return R;
         }
 
-        public static Integer RandomInteger(Integer min) 
+        public static Integer RandomI(Integer min) 
         {
             Random random = new Random();
             byte[] bytes = new byte [random.Next(2, 64)];
@@ -44,7 +46,7 @@ namespace AsymmetricCryptography.Utils
             return R;
         }
 
-        public static Integer RandomInteger(Integer min, Integer max) 
+        public static Integer RandomI(Integer min, Integer max) 
         {
             Random random = new Random();
             byte[] bytes = max.ToByteArray ();
@@ -58,5 +60,59 @@ namespace AsymmetricCryptography.Utils
             } while (!(min < R && R < max));
             return R;
         }
+
+        
+        // GeneratePrime(int n) - where n is number of bits in a generated prime number
+        public static Integer GeneratePrime(int n)
+        {
+            String container;
+            Integer random;
+            var lehmerGenerator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
+
+            do
+            {
+                container = Tools.ToString(
+                    lehmerGenerator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
+
+                random = Integer.Parse(BigInteger.Parse(container, NumberStyles.AllowHexSpecifier).ToString());
+            }
+            while(!PrimalityTests.MillerRabin(random));
+
+            return random;
+        }
+
+        public static int[] GeneratePrimes(int n)
+        {
+            int[] arr = new int[n];
+
+            int i = 1, j = 3;
+            arr[0] = 2;
+
+            while (i < n)
+            {
+                if(PrimalityTests.MillerRabin(j))
+                {
+                    arr[i] = j;
+                    i++;
+                }    
+                j++;
+            }
+
+            return arr;
+        }
+
+        // GenerateStrongPrime(int n) - where n is number of bits in a generated prime number
+        public static Integer GenerateStrongPrime(int n){
+            Integer prime;
+            int i = 1;
+            do
+            {
+                prime = 2 * i * GeneratePrime(n) + 1;
+                i++;
+            } while(!PrimalityTests.MillerRabin(prime));
+            
+            return prime;
+        }
     }
+    
 }

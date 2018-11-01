@@ -23,7 +23,7 @@ namespace AsymmetricCryptography.Generators.BMGenerators
         public BMGeneratorByte(Integer? seed) {
             if (seed == null)
             {
-                this.seed = MathI.RandomInteger(0, P);
+                this.seed = MathI.RandomI(0, P);
             } 
             else
             {
