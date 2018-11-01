@@ -4,7 +4,7 @@ using AsymmetricCryptography.Utils;
 
 namespace AsymmetricCryptography.Cryptosystems
 {
-    public class RSA
+    public partial class RSAProvider
     {
         // Private key
         private Integer d;
@@ -22,15 +22,15 @@ namespace AsymmetricCryptography.Cryptosystems
             get;
         }
 
-        public RSA()
+        public RSAProvider()
         {
             GenerateKeyPair();
         }
 
         private void GenerateKeyPair()
         {
-            Integer p = MathI.GenerateStrongPrime(32),
-                q = MathI.GenerateStrongPrime(32),
+            Integer p = MathI.GeneratePrime(32),
+                q = MathI.GeneratePrime(32),
                 n = p * q,
                 e = (int)Math.Pow(2, 16) + 1,
                 euler = (p - 1) * (q - 1);
@@ -50,7 +50,6 @@ namespace AsymmetricCryptography.Cryptosystems
             return c.ModPow(d, InternalPublicKey.n);
         }
 
-        //*? How should Sign signature look like?
 
         public (Integer m, Integer s) Sign(Integer m)
         {
