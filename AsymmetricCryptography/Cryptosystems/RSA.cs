@@ -1,44 +1,61 @@
 using System;
 using NeinMath;
+using AsymmetricCryptography.Utils;
 
 namespace AsymmetricCryptography.Cryptosystems
 {
     public class RSA
     {
+        // Private key
+        private Integer d;
+
+        private (Integer e, Integer n) externalPublicKey;
 
         //* This public property is used instead of SendKey method
-        public ValueTuple<Integer, Integer> PublicKey
+        public (Integer e, Integer n) PublicKey
         {
             private set;
             get;
         }
+
+        public RSA(Integer p, Integer q, Integer e)
+        {
+            if (!PrimalityTests.MillerRabin(p) || !PrimalityTests.MillerRabin(q))
+                throw new ArgumentException("p and q must be prime numbers");
+
+            var n = p * q;
+            var euler = (p - 1) * (q - 1);
+            if (MathI.GCD(e, euler) != 1)
+                throw new ArgumentException("Euler(p * q) should be mutually simple with e");
+            d = e.ModInv(euler);
+            PublicKey = new ValueTuple<Integer, Integer>(e, n);
+        }
+
+        // public bool ReceiveKey((Integer e, Integer n) publicKey)
+        // {
+
+        // }
 
         // private ValueTuple<Integer, Integer> GenerateKeyPair()
         // {
 
         // }
 
-        // *! Fix list of parameters according fo class fields
-        public Integer Encrypt(Integer m, ValueTuple<Integer, Integer> publicKey)
+        public Integer Encrypt(Integer m, (Integer e, Integer n) publicKey)
         {
-            System.Console.WriteLine("{0} ^ {1} mod {2}", m, publicKey.Item1, publicKey.Item2);
-            return m.ModPow(publicKey.Item1, publicKey.Item2);
+            return m.ModPow(publicKey.e, publicKey.n);
         }
 
-        // public Integer Decrypt(Integer c)
-        // {
-
-        // }
+        // Integer c -- encrypted message C
+        public Integer Decrypt(Integer c)
+        {
+            return c.ModPow(d, PublicKey.n);
+        }
 
         //*? How should Sign signature look like?
 
         //*? Should it be private? And what parameters should it accept
         // private bool Verify()
-        // {
-
-        // }
-
-        // public bool ReceiveKey(ValueTuple<Integer, Integer> publicKey)
         // {
 
         // }
