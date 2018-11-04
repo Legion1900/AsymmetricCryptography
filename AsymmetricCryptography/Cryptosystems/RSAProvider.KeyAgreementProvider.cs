@@ -8,7 +8,26 @@ namespace AsymmetricCryptography.Cryptosystems
     {
         public class KeyAgreementProvider
         {
-            public RSAProvider provider = new RSAProvider();
+            public RSAProvider provider;
+
+            private KeyAgreementProvider()
+            {
+                provider = new RSAProvider();
+            }
+
+            public static (KeyAgreementProvider a, KeyAgreementProvider b) GetUsers()
+            {
+                var a = new KeyAgreementProvider();
+                var b = new KeyAgreementProvider();
+                if (a.provider.InternalPublicKey.n > b.provider.InternalPublicKey.n)
+                {
+                    var tmp = a.provider;
+                    a.provider = b.provider;
+                    b.provider = tmp;
+                }
+
+                return (a, b);
+            }
 
             public (Integer k1, Integer s1) SendKey(Integer k)
             {
@@ -21,9 +40,9 @@ namespace AsymmetricCryptography.Cryptosystems
                     throw new ArgumentOutOfRangeException("k is higher then 1 or lower then InternalPublicKey.n!");
                 }
 
-                var k1 = k.ModPow(provider.ExternalPublicKey.e, provider.ExternalPublicKey.n);
-                var s = k.ModPow(provider.d, provider.InternalPublicKey.n);
-                var s1 = s.ModPow(provider.ExternalPublicKey.e, provider.ExternalPublicKey.n);
+                var k1 = provider.Encrypt(k);
+                var s = provider.Encrypt(k, (provider.d, provider.InternalPublicKey.n));
+                var s1 = provider.Encrypt(s);
 
                 return (k1, s1);
             }
@@ -33,8 +52,8 @@ namespace AsymmetricCryptography.Cryptosystems
                 // *! in ReceiveKey method we are working as an user B
                 // *! so Internal.d and Internal.n values are secret and public keys of the user B
                 // *! this way, External.e and External.n are public key of an user A
-                var k = key.k1.ModPow(provider.d, provider.InternalPublicKey.n);
-                var s = key.s1.ModPow(provider.d, provider.InternalPublicKey.n);
+                var k = provider.Encrypt(key.k1, (provider.d, provider.InternalPublicKey.n));
+                var s = provider.Encrypt(key.s1, (provider.d, provider.InternalPublicKey.n));
 
                 System.Console.WriteLine($"received k = {k}");
                 return (k == s.ModPow(provider.ExternalPublicKey.e, provider.ExternalPublicKey.n));

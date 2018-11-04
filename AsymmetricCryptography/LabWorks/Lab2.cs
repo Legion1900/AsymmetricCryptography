@@ -11,8 +11,9 @@ namespace AsymmetricCryptography.LabWorks
         public static (Integer a, Integer b) tuple;
         public static void Main()
         {
-            var userA = new RSAProvider.KeyAgreementProvider();
-            var userB = new RSAProvider.KeyAgreementProvider();     
+            var users = RSAProvider.KeyAgreementProvider.GetUsers();
+            var userA = users.a;
+            var userB = users.b;     
 
             if (userA.provider.InternalPublicKey.n > userB.provider.InternalPublicKey.n)
             {

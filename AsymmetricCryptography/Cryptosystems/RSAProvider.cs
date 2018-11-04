@@ -39,17 +39,17 @@ namespace AsymmetricCryptography.Cryptosystems
             InternalPublicKey = (e, n);
         }
 
-        public Integer Encrypt(Integer m, (Integer e, Integer n) publicKey)
+        public Integer Encrypt(Integer m)
         {
-            return m.ModPow(publicKey.e, publicKey.n);
+            return Encrypt(m, ExternalPublicKey);
         }
 
         // Integer c -- encrypted message C
         public Integer Decrypt(Integer c)
         {
-            return c.ModPow(d, InternalPublicKey.n);
+            // return c.ModPow(d, InternalPublicKey.n);
+            return Encrypt(c, (d, InternalPublicKey.n));
         }
-
 
         public (Integer m, Integer s) Sign(Integer m)
         {
@@ -67,6 +67,11 @@ namespace AsymmetricCryptography.Cryptosystems
             var m = signMessage.s.ModPow(ExternalPublicKey.e, ExternalPublicKey.n);
 
             return (signMessage.m == m);
+        }
+
+        private Integer Encrypt(Integer m, (Integer e, Integer n) publicKey)
+        {
+            return m.ModPow(publicKey.e, publicKey.n);
         }
     }
 }
