@@ -10,7 +10,7 @@ namespace AsymmetricCryptography.Utils
             string[] primesStr = System.IO.File.ReadAllText("./Generated/primes.txt").Split(' ');
             for (int i = 0; i < 100; i++)
             {
-                if (p / int.Parse(primesStr[i]) == 0) return false;
+                if (p % int.Parse(primesStr[i]) == 0) return false;
             }
 
 

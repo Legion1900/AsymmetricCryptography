@@ -8,7 +8,15 @@ namespace AsymmetricCryptography.Cryptosystems
     {
         public class KeyAgreementProvider
         {
-            public RSAProvider provider;
+            private RSAProvider provider;
+
+            public (Integer e, Integer n) PublicKey
+            {
+                get
+                {
+                    return provider.InternalPublicKey;  
+                }
+            }
 
             private KeyAgreementProvider()
             {
@@ -25,8 +33,17 @@ namespace AsymmetricCryptography.Cryptosystems
                     a.provider = b.provider;
                     b.provider = tmp;
                 }
+                a.provider.ExternalPublicKey = b.provider.InternalPublicKey;
+                b.provider.ExternalPublicKey = a.provider.InternalPublicKey;
 
                 return (a, b);
+            }
+
+            public static KeyAgreementProvider GetUser((Integer e, Integer n) extPublicKey)
+            {
+                var user = new KeyAgreementProvider();
+                user.provider.ExternalPublicKey = extPublicKey;
+                return user;
             }
 
             public (Integer k1, Integer s1) SendKey(Integer k)
@@ -41,7 +58,7 @@ namespace AsymmetricCryptography.Cryptosystems
                 }
 
                 var k1 = provider.Encrypt(k);
-                var s = provider.Encrypt(k, (provider.d, provider.InternalPublicKey.n));
+                var s = provider.Sign(k).s;
                 var s1 = provider.Encrypt(s);
 
                 return (k1, s1);
@@ -52,11 +69,11 @@ namespace AsymmetricCryptography.Cryptosystems
                 // *! in ReceiveKey method we are working as an user B
                 // *! so Internal.d and Internal.n values are secret and public keys of the user B
                 // *! this way, External.e and External.n are public key of an user A
-                var k = provider.Encrypt(key.k1, (provider.d, provider.InternalPublicKey.n));
-                var s = provider.Encrypt(key.s1, (provider.d, provider.InternalPublicKey.n));
+                var k = provider.Sign(key.k1).s;
+                var s = provider.Sign(key.s1).s;
 
                 System.Console.WriteLine($"received k = {k}");
-                return (k == s.ModPow(provider.ExternalPublicKey.e, provider.ExternalPublicKey.n));
+                return provider.Verify((k, s));
             }
         }
     }
