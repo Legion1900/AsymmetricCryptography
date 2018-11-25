@@ -68,12 +68,12 @@ namespace AsymmetricCryptography.Utils
         {
             String container;
             Integer random;
-            var lehmerGenerator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
+            var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
 
             do
             {
                 container = Tools.ToString(
-                    lehmerGenerator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
+                    generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
 
                 random = Integer.Parse(BigInteger.Parse(container, NumberStyles.AllowHexSpecifier).ToString());
             }

@@ -1,5 +1,7 @@
 using System;
+using System.Numerics;
 using System.Diagnostics;
+using System.Globalization;
 using NeinMath;
 using AsymmetricCryptography.Utils;
 using AsymmetricCryptography.Cryptosystems;
@@ -25,11 +27,22 @@ namespace AsymmetricCryptography.LabWorks
             userA.provider.ExternalPublicKey = userB.provider.InternalPublicKey;
             userB.provider.ExternalPublicKey = userA.provider.InternalPublicKey;
 
-            var k = MathI.GeneratePrime(32);
-            var keyA = userA.SendKey(k);
-            var receiveCheck = userB.ReceiveKey(keyA);
+            var k = MathI.GeneratePrime(6);
+            var str = k.ToHexString();
+            System.Console.WriteLine(k);
+            System.Console.WriteLine(str);
 
-            System.Console.WriteLine($"true k = {k} \nreceived {receiveCheck} key");
+            var a = "0" + ((Integer)7).ToHexString();
+            var b = ((Integer)24).ToHexString();
+            str += a + b;
+
+            k = Integer.Parse(BigInteger.Parse(str.Insert(0, "0"), NumberStyles.AllowHexSpecifier).ToString());
+
+            var keyA = userA.SendKey(k);
+            System.Console.WriteLine(keyA);
+            // var receiveCheck = userB.ReceiveKey(keyA);
+
+            // System.Console.WriteLine($"true k = {k} \nreceived {receiveCheck} key");
         }
     }
 }

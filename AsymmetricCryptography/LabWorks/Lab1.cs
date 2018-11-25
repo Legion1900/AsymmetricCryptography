@@ -36,37 +36,40 @@ namespace AsymmetricCryptography.LabWorks
                 Console.WriteLine();
             }
             
-            var seed = 636746134997083034;
+            var seed = (uint)(int)DateTime.Now.Ticks;
             // var librarianSeed = File.ReadAllText("C:\\Users\\Tyler\\Desktop\\seed.txt");
 
             IGenerator[] generators =
             {
-                new LehmerLow((uint)seed),
+                // new LehmerLow((uint)seed),
                 new LehmerHigh((uint)seed),
-                new L20(seed),
-                new L89(seed),
-                new GeffeGenerator(seed),
-                // new Librarian(librarianSeed),
-                new BMGeneratorBit(null),
-                new BMGeneratorByte(null),
-                new BBSGeneratorBit(null),
-                new BBSGeneratorByte(null), 
-                new WolframGenerator(null), 
+                // new L20(seed),
+                // new L89(seed),
+                // new GeffeGenerator(seed),
+                // // new Librarian(librarianSeed),
+                // new BMGeneratorBit(null),
+                // new BMGeneratorByte(null),
+                // new BBSGeneratorBit(null),
+                // new BBSGeneratorByte(null), 
+                // new WolframGenerator(null), 
             };
 
             foreach (var gen in generators)
             {
-                RunTests(gen, N);
+                for (int j = 0; j < 10; j++)
+                {
+                    RunTests(gen, N);
+                }
             }
             
             Random random = new Random();
-            byte[] bytes = new byte[N];
-            random.NextBytes(bytes);
-            bytes[bytes.Length - 1] &= (byte) 0x7F;
-            Console.WriteLine("Name: C# Random");
-            Console.WriteLine("EquiprobabilityCriterion: {0}", EquiprobabilityCriterion.Test(Tools.ToString(bytes)));
-            Console.WriteLine("IndependenceCriterion: {0}", IndependenceCriterion.ChiStatistics(bytes));
-            Console.WriteLine("IntervalsCriterion: {0}", IntervalsCriterion.ChiStatistics(bytes));
+            // byte[] bytes = new byte[N];
+            // random.NextBytes(bytes);
+            // bytes[bytes.Length - 1] &= (byte) 0x7F;
+            // Console.WriteLine("Name: C# Random");
+            // Console.WriteLine("EquiprobabilityCriterion: {0}", EquiprobabilityCriterion.Test(Tools.ToString(bytes)));
+            // Console.WriteLine("IndependenceCriterion: {0}", IndependenceCriterion.ChiStatistics(bytes));
+            // Console.WriteLine("IntervalsCriterion: {0}", IntervalsCriterion.ChiStatistics(bytes));
             
         }
 
@@ -84,11 +87,13 @@ namespace AsymmetricCryptography.LabWorks
             // Console.WriteLine("Seed: {0}", gen.Seed);
             Console.WriteLine(hexRes);
             Console.WriteLine();
+            Console.WriteLine();
             Console.WriteLine("_______________________________");
         }
 
         private static void RunTests(IGenerator gen, int byteNum)
         {
+            System.Console.WriteLine();
             var output = gen.RandomBytes(byteNum);
             double[] chi = new double[3];
             int i = 0;
@@ -97,10 +102,12 @@ namespace AsymmetricCryptography.LabWorks
             chi[1] = IndependenceCriterion.ChiStatistics(output);
             chi[2] = IntervalsCriterion.ChiStatistics(output);
             
-            Console.WriteLine("Name: {0}", gen.GetType().Name);
-            if (gen.GetType().Name != "Librarian")
-                Console.WriteLine("Seed: {0}", gen.Seed);
+            // Console.WriteLine("Name: {0}", gen.GetType().Name);
+            // if (gen.GetType().Name != "Librarian")
+            //     Console.WriteLine("Seed: {0}", gen.Seed);
             Console.WriteLine("EquiprobabilityCriterion: {0}", chi[0]);
+            Console.WriteLine("IndependenceCriterion: {0}", chi[1]);
+            Console.WriteLine("IntervalsCriterion: {0}", chi[2]);
             foreach (var a in Alpha)
             {
                 Console.Write("|| ");
@@ -119,8 +126,7 @@ namespace AsymmetricCryptography.LabWorks
                 
                 i++;
             }
-            Console.WriteLine("IndependenceCriterion: {0}", chi[1]);
-            Console.WriteLine("IntervalsCriterion: {0}", chi[2]);
+            
             Console.WriteLine("________________________________________");
         }
     }
