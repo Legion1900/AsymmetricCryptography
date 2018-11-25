@@ -76,6 +76,8 @@ namespace AsymmetricCryptography.Utils
                     generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
 
                 random = Integer.Parse(BigInteger.Parse(container, NumberStyles.AllowHexSpecifier).ToString());
+                // random |= (1 << (n * 8))
+                
             }
             while(!PrimalityTests.MillerRabin(random));
 

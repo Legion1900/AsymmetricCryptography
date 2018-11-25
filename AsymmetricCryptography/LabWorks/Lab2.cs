@@ -1,6 +1,5 @@
 using System;
 using System.Numerics;
-using System.Diagnostics;
 using System.Globalization;
 using NeinMath;
 using AsymmetricCryptography.Utils;
@@ -13,19 +12,14 @@ namespace AsymmetricCryptography.LabWorks
         public static (Integer a, Integer b) tuple;
         public static void Main()
         {
+            Test();
+        }
+
+        private static void Demo()
+        {
             var users = RSAProvider.KeyAgreementProvider.GetUsers();
             var userA = users.a;
-            var userB = users.b;     
-
-            if (userA.provider.InternalPublicKey.n > userB.provider.InternalPublicKey.n)
-            {
-                var tmp = userB;
-                userB = userA;
-                userA = tmp;
-            }       
-
-            userA.provider.ExternalPublicKey = userB.provider.InternalPublicKey;
-            userB.provider.ExternalPublicKey = userA.provider.InternalPublicKey;
+            var userB = users.b;
 
             var k = MathI.GeneratePrime(6);
             var str = k.ToHexString();
@@ -43,6 +37,32 @@ namespace AsymmetricCryptography.LabWorks
             // var receiveCheck = userB.ReceiveKey(keyA);
 
             // System.Console.WriteLine($"true k = {k} \nreceived {receiveCheck} key");
+        }
+
+        private static void Test()
+        {
+            System.Console.Write("Enter n: ");
+            Integer n = HexToInteger(Console.ReadLine());
+            Integer e = ((Integer)2).Pow(16) + 1;
+
+            var user = RSAProvider.KeyAgreementProvider.GetUser((e, n));
+            System.Console.WriteLine($"n = {user.PublicKey.n.ToHexString()}\ne = {user.PublicKey.e.ToHexString()}");
+
+            System.Console.Write("\nEnter k1: ");
+            string k1 = Console.ReadLine();
+            System.Console.Write("\nEnter s1: ");
+            string s1 = Console.ReadLine();
+            System.Console.WriteLine(user.ReceiveKey((HexToInteger(k1), HexToInteger(s1))));
+
+
+            
+        }
+
+        private static Integer HexToInteger(string hex)
+        {
+            return Integer.Parse(BigInteger
+                .Parse(hex.Insert(0, "0"), NumberStyles.AllowHexSpecifier)
+                .ToString());
         }
     }
 }
