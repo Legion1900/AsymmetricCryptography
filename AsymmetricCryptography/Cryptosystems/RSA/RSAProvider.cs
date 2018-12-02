@@ -2,7 +2,7 @@ using System;
 using NeinMath;
 using AsymmetricCryptography.Utils;
 
-namespace AsymmetricCryptography.Cryptosystems
+namespace AsymmetricCryptography.Cryptosystems.RSA
 {
     public partial class RSAProvider
     {

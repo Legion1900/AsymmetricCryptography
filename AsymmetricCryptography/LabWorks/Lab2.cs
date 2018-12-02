@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Globalization;
 using NeinMath;
 using AsymmetricCryptography.Utils;
-using AsymmetricCryptography.Cryptosystems;
+using AsymmetricCryptography.Cryptosystems.RSA;
 
 namespace AsymmetricCryptography.LabWorks
 {
