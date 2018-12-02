@@ -18,16 +18,36 @@ namespace AsymmetricCryptography.Utils
         }
 
         // ax + by = g = gcd(a, b)
-        public static (Integer g, Integer x, Integer y) ExtendedGCD (Integer a, Integer b)
+        public static (Integer g, Integer u, Integer v) ExtendedGCD (Integer a, Integer b)
         {
             if (a == 0)
                 return (b, 0, 1);
             else
             {
                 var egcd = ExtendedGCD(b % a, a);
-                return (egcd.g, egcd.y - (b / a) * egcd.x, egcd.x);
+                return (egcd.g, egcd.v - (b / a) * egcd.u, egcd.u);
             }
         }
+
+
+    
+        public static Integer[] QuickSquareRoot(Integer y, (Integer p, Integer q) n)
+        {
+            var s1 = y.ModPow((n.p + 1) / 4, n.p);
+            var s2 = y.ModPow((n.q + 1) / 4, n.q);
+            var mod = n.p * n.q;
+
+            var egcd = ExtendedGCD(n.p, n.q);
+
+            return new Integer[]{
+                (egcd.u * n.p * s1 + egcd.v * n.p * s2) % mod, 
+                (egcd.u * n.p * s1 - egcd.v * n.p * s2) % mod + mod,
+                (-egcd.u * n.p * s1 + egcd.v * n.p * s2) % mod,
+                (-egcd.u * n.p * s1 - egcd.v * n.p * s2) % mod + mod
+            };
+        }
+
+
 
         // ~~~RandomInteger: ()/(min)/(min, max) - returns random NeinMath Integer~~~ //
         public static Integer RandomI() 
@@ -139,37 +159,6 @@ namespace AsymmetricCryptography.Utils
             while (true);
         }
 
-        // Generate a number of primes and write to file
-        private static void GeneratePrimes(int n)
-        {
-            int i = 1, j = 3;
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(2);
-            sb.Append(' ');
-
-            while (i < n)
-            {
-                if(PrimalityTests.MillerRabin(j))
-                {
-                    if(i == n - 1){
-                        sb.Append(j);
-                        System.Console.WriteLine("help");
-                        i++;
-                    }
-                    else
-                    {
-                        sb.Append(j);
-                        sb.Append(' ');
-                        i++;
-                    }
-                }    
-                j++;
-            }
-
-            System.IO.File.WriteAllText("./Generated/primes.txt", sb.ToString());
-        }
-
         public static Integer JacobiSymbol(Integer a, Integer b)
         {
             // Mutual simlicity check
@@ -213,6 +202,40 @@ namespace AsymmetricCryptography.Utils
             }
 
             return ans;
+        }
+
+
+
+
+        // Generate a number of primes and write to file
+        private static void GeneratePrimes(int n)
+        {
+            int i = 1, j = 3;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(2);
+            sb.Append(' ');
+
+            while (i < n)
+            {
+                if(PrimalityTests.MillerRabin(j))
+                {
+                    if(i == n - 1){
+                        sb.Append(j);
+                        System.Console.WriteLine("help");
+                        i++;
+                    }
+                    else
+                    {
+                        sb.Append(j);
+                        sb.Append(' ');
+                        i++;
+                    }
+                }    
+                j++;
+            }
+
+            System.IO.File.WriteAllText("./Generated/primes.txt", sb.ToString());
         }
     }
 }
