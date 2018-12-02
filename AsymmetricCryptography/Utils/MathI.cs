@@ -197,14 +197,13 @@ namespace AsymmetricCryptography.Utils
                     t++;
                     a /= 2;
                 }
-
-                if ((t % 2 == 1) && (b % 8 == 3 || b % 8 == 5))
-                    ans = -ans;
+                if (t % 2 == 1)
+                    if (b % 8 == 3 || b % 8 == 5)
+                        ans = -ans;
+                
                 // Quadratic reciprocity
-                if (a % 4 == b % 4)
-                {
+                if ((a % 4 == 3) && (b % 4 == 3))
                     ans = -ans;
-                }
                 var tmp = a;
                 a = b % tmp;
                 b = tmp;
