@@ -17,6 +17,7 @@ namespace AsymmetricCryptography.Utils
                 return GCD(b, a % b);
         }
 
+        // ax + by = g = gcd(a, b)
         public static (Integer g, Integer x, Integer y) ExtendedGCD (Integer a, Integer b)
         {
             if (a == 0)
@@ -81,16 +82,17 @@ namespace AsymmetricCryptography.Utils
             Integer random;
             var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
 
-            do
-            {
-                container = Tools.ToString(
+            container = Tools.ToString(
                     generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
 
-                random = Integer.Parse(BigInteger.Parse(container, NumberStyles.AllowHexSpecifier).ToString());
-                // random |= (1 << (n * 8))
-                
+            random = Tools.HexToInteger(container);
+            var size = random * 2 - 2;
+
+            do
+            {
+                random += 2;
             }
-            while(!PrimalityTests.MillerRabin(random));
+            while(!(PrimalityTests.MillerRabin(random) && random != size));
 
             return random;
         }
@@ -121,20 +123,41 @@ namespace AsymmetricCryptography.Utils
                     generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
                 prime = Tools.HexToInteger(container);
                 k++;
-            } while(!PrimalityTests.MillerRabin(prime));
+            } while(!(PrimalityTests.MillerRabin(prime) && (prime - 3) % 4 == 0));
             
             return prime;
         }
 
-        public static Integer GenerateBlumInteger(int n) //TODO
+        public static Integer GenerateBlumPrime3(int n)
         {
+            Integer prime;
+            String container;
+            var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
             
-            return 0;
+            do
+            {
+                do
+                {
+                    container = Tools.ToString(
+                    generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
+                    prime = Tools.HexToInteger(container);
+                    prime |= 1;
+                } while ((prime - 3) % 4 != 0);
+                
+                while (prime != 2 * prime - 4)
+                {
+                    prime += 4;
+                    if (PrimalityTests.MillerRabin(prime))
+                    {
+                        return prime;
+                    }
+                }
+            }
+            while (true);
         }
 
-
         // Generate a number of primes and write to file
-        public static void GeneratePrimes(int n)
+        private static void GeneratePrimes(int n)
         {
             int i = 1, j = 3;
 
@@ -163,7 +186,6 @@ namespace AsymmetricCryptography.Utils
 
             System.IO.File.WriteAllText("./Generated/primes.txt", sb.ToString());
         }
-
     }
     
 }
