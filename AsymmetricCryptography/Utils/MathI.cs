@@ -164,6 +164,50 @@ namespace AsymmetricCryptography.Utils
             System.IO.File.WriteAllText("./Generated/primes.txt", sb.ToString());
         }
 
+        public static Integer JacobiSymbol(Integer a, Integer b)
+        {
+            // Mutual simlicity check
+            if (GCD(a, b) != 1)
+            {
+                return 0;
+            }
+            
+            // Transition to positive numbers
+            int ans = 1;
+            if (a < 0)
+            {
+                a = -a;
+                if (b % 4 == 3)
+                    ans = -ans;
+            }
+
+            // Getting rid of parity
+            int t;
+            while (true)
+            {
+                t = 0;
+                while (a % 2 == 0)
+                {
+                    t++;
+                    a /= 2;
+                }
+
+                if ((t % 2 == 1) && (b % 8 == 3 || b % 8 == 5))
+                    ans = -ans;
+                // Quadratic reciprocity
+                if (a % 4 == b % 4)
+                {
+                    ans = -ans;
+                }
+                var tmp = a;
+                a = b % tmp;
+                b = tmp;
+
+                if (a == 0)
+                    break;
+            }
+
+            return ans;
+        }
     }
-    
 }
