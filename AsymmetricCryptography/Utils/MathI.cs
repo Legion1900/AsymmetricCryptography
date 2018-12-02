@@ -84,8 +84,7 @@ namespace AsymmetricCryptography.Utils
 
             container = Tools.ToString(
                     generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
-
-            random = Tools.HexToInteger(container);
+            random = Tools.HexToInteger(container) | 1;
             var size = random * 2 - 2;
 
             do
@@ -113,22 +112,6 @@ namespace AsymmetricCryptography.Utils
         }
 
         public static Integer GenerateBlumPrime(int n)
-        {
-            Integer prime, k = 1;
-            String container;
-            var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
-            do
-            {
-                container = Tools.ToString(
-                    generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
-                prime = Tools.HexToInteger(container);
-                k++;
-            } while(!(PrimalityTests.MillerRabin(prime) && (prime - 3) % 4 == 0));
-            
-            return prime;
-        }
-
-        public static Integer GenerateBlumPrime3(int n)
         {
             Integer prime;
             String container;
