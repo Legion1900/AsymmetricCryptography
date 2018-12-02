@@ -115,7 +115,11 @@ namespace AsymmetricCryptography.Utils
         public static Integer HexToInteger(string hex)
         {
             return Integer.Parse(BigInteger
-                .Parse(hex.Insert(0, "0"), NumberStyles.AllowHexSpecifier)
+                .Parse(
+                    hex
+                        .Replace(" ", String.Empty)
+                        .Insert(0, "0"),
+                    NumberStyles.AllowHexSpecifier)
                 .ToString());
         }
     }

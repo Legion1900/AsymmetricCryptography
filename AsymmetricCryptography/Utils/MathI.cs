@@ -17,6 +17,17 @@ namespace AsymmetricCryptography.Utils
                 return GCD(b, a % b);
         }
 
+        public static (Integer g, Integer x, Integer y) ExtendedGCD (Integer a, Integer b)
+        {
+            if (a == 0)
+                return (b, 0, 1);
+            else
+            {
+                var egcd = ExtendedGCD(b % a, a);
+                return (egcd.g, egcd.y - (b / a) * egcd.x, egcd.x);
+            }
+        }
+
         // ~~~RandomInteger: ()/(min)/(min, max) - returns random NeinMath Integer~~~ //
         public static Integer RandomI() 
         {
@@ -84,6 +95,45 @@ namespace AsymmetricCryptography.Utils
             return random;
         }
 
+        
+        // GenerateStrongPrime(int n) - where n is number of bits in a generated prime number
+        public static Integer GenerateStrongPrime(int n)
+        {
+            Integer prime;
+            int i = 1;
+            do
+            {
+                prime = 2 * i * GeneratePrime(n) + 1;
+                i++;
+            } while(!PrimalityTests.MillerRabin(prime));
+            
+            return prime;
+        }
+
+        public static Integer GenerateBlumPrime(int n)
+        {
+            Integer prime, k = 1;
+            String container;
+            var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
+            do
+            {
+                container = Tools.ToString(
+                    generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
+                prime = Tools.HexToInteger(container);
+                k++;
+            } while(!PrimalityTests.MillerRabin(prime));
+            
+            return prime;
+        }
+
+        public static Integer GenerateBlumInteger(int n) //TODO
+        {
+            
+            return 0;
+        }
+
+
+        // Generate a number of primes and write to file
         public static void GeneratePrimes(int n)
         {
             int i = 1, j = 3;
@@ -114,18 +164,6 @@ namespace AsymmetricCryptography.Utils
             System.IO.File.WriteAllText("./Generated/primes.txt", sb.ToString());
         }
 
-        // GenerateStrongPrime(int n) - where n is number of bits in a generated prime number
-        public static Integer GenerateStrongPrime(int n){
-            Integer prime;
-            int i = 1;
-            do
-            {
-                prime = 2 * i * GeneratePrime(n) + 1;
-                i++;
-            } while(!PrimalityTests.MillerRabin(prime));
-            
-            return prime;
-        }
     }
     
 }
