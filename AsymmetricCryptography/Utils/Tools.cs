@@ -122,5 +122,10 @@ namespace AsymmetricCryptography.Utils
                     NumberStyles.AllowHexSpecifier)
                 .ToString());
         }
+
+        public static int BitLength(Integer num)
+        {
+            return (int)num.Log(2) + 1;
+        }
     }
 }
