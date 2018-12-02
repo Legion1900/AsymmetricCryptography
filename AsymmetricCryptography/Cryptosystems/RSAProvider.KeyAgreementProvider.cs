@@ -22,7 +22,7 @@ namespace AsymmetricCryptography.Cryptosystems
             {
                 provider = new RSAProvider();
             }
-
+            
             public static (KeyAgreementProvider a, KeyAgreementProvider b) GetUsers()
             {
                 var a = new KeyAgreementProvider();

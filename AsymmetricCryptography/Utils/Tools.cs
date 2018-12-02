@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Numerics;
 using System.Text;
 using NeinMath;
@@ -109,6 +110,13 @@ namespace AsymmetricCryptography.Utils
         public static void WriteToFile(string path, string contents, Integer seed)
         {
             System.IO.File.WriteAllText(path, (contents + "\nseed:" + seed.ToString()));
+        }
+
+        public static Integer HexToInteger(string hex)
+        {
+            return Integer.Parse(BigInteger
+                .Parse(hex.Insert(0, "0"), NumberStyles.AllowHexSpecifier)
+                .ToString());
         }
     }
 }

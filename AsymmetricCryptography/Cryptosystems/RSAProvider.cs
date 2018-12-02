@@ -29,8 +29,8 @@ namespace AsymmetricCryptography.Cryptosystems
 
         private void GenerateKeyPair()
         {
-            Integer p = MathI.GeneratePrime(32),
-                q = MathI.GeneratePrime(32),
+            Integer p = MathI.GeneratePrime(6),
+                q = MathI.GeneratePrime(6),
                 n = p * q,
                 e = (int)Math.Pow(2, 16) + 1,
                 euler = (p - 1) * (q - 1);
