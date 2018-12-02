@@ -17,6 +17,7 @@ namespace AsymmetricCryptography.Utils
                 return GCD(b, a % b);
         }
 
+        // ax + by = g = gcd(a, b)
         public static (Integer g, Integer x, Integer y) ExtendedGCD (Integer a, Integer b)
         {
             if (a == 0)
@@ -81,16 +82,16 @@ namespace AsymmetricCryptography.Utils
             Integer random;
             var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
 
+            container = Tools.ToString(
+                    generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
+            random = Tools.HexToInteger(container) | 1;
+            var size = random * 2 - 2;
+
             do
             {
-                container = Tools.ToString(
-                    generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
-
-                random = Integer.Parse(BigInteger.Parse(container, NumberStyles.AllowHexSpecifier).ToString());
-                // random |= (1 << (n * 8))
-                
+                random += 2;
             }
-            while(!PrimalityTests.MillerRabin(random));
+            while(!(PrimalityTests.MillerRabin(random) && random != size));
 
             return random;
         }
@@ -112,29 +113,34 @@ namespace AsymmetricCryptography.Utils
 
         public static Integer GenerateBlumPrime(int n)
         {
-            Integer prime, k = 1;
+            Integer prime;
             String container;
             var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
+            
             do
             {
-                container = Tools.ToString(
+                do
+                {
+                    container = Tools.ToString(
                     generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
-                prime = Tools.HexToInteger(container);
-                k++;
-            } while(!PrimalityTests.MillerRabin(prime));
-            
-            return prime;
+                    prime = Tools.HexToInteger(container);
+                    prime |= 1;
+                } while ((prime - 3) % 4 != 0);
+                
+                while (prime != 2 * prime - 4)
+                {
+                    prime += 4;
+                    if (PrimalityTests.MillerRabin(prime))
+                    {
+                        return prime;
+                    }
+                }
+            }
+            while (true);
         }
-
-        public static Integer GenerateBlumInteger(int n) //TODO
-        {
-            
-            return 0;
-        }
-
 
         // Generate a number of primes and write to file
-        public static void GeneratePrimes(int n)
+        private static void GeneratePrimes(int n)
         {
             int i = 1, j = 3;
 
@@ -171,7 +177,7 @@ namespace AsymmetricCryptography.Utils
             {
                 return 0;
             }
-            
+
             // Transition to positive numbers
             int ans = 1;
             if (a < 0)
