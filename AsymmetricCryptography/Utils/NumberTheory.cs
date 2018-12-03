@@ -25,20 +25,27 @@ namespace AsymmetricCryptography.Utils
             }
         }
 
+        public static Integer Mod(Integer x, Integer n)
+        {
+            x %= n;
+            return x < 0? x + n: x;
+        }
+
         public static Integer[] QuickSquareRoot(Integer y, (Integer p, Integer q) n)
         {
-            var s1 = y.ModPow((n.p + 1) / 4, n.p);
-            var s2 = y.ModPow((n.q + 1) / 4, n.q);
-            var mod = n.p * n.q;
+            var mp = y.ModPow((n.p + 1) / 4, n.p);
+            var mq = y.ModPow((n.q + 1) / 4, n.q);
+            var N = n.p * n.q;
 
             var egcd = ExtendedGCD(n.p, n.q);
+            
+            var output = new Integer[4];
+            output[0] = Mod((egcd.u * n.p * mq + egcd.v * n.q * mp), N);
+            output[1] = Mod((egcd.u * n.p * mq - egcd.v * n.q * mp), N);
+            output[2] = N - output[0];
+            output[3] = N - output[2];
 
-            return new Integer[]{
-                (egcd.u * n.p * s1 + egcd.v * n.p * s2) % mod,
-                (egcd.u * n.p * s1 - egcd.v * n.p * s2) % mod + mod,
-                (-egcd.u * n.p * s1 + egcd.v * n.p * s2) % mod,
-                (-egcd.u * n.p * s1 - egcd.v * n.p * s2) % mod + mod
-            };
+            return output;
         }
         
         public static int JacobiSymbol(Integer a, Integer b)

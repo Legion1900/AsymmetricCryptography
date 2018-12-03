@@ -9,50 +9,6 @@ namespace AsymmetricCryptography.Utils
 {
     public static class MathI
     {
-        public static Integer GCD(Integer a, Integer b) 
-        {
-            if (b == 0)
-                return a;
-            else
-                return GCD(b, a % b);
-        }
-
-        // ax + by = g = gcd(a, b)
-        public static (Integer g, Integer u, Integer v) ExtendedGCD (Integer a, Integer b)
-        {
-            if (a == 0)
-                return (b, 0, 1);
-            else
-            {
-                var egcd = ExtendedGCD(b % a, a);
-                return (egcd.g, egcd.v - (b / a) * egcd.u, egcd.u);
-            }
-        }
-
-        public static Integer Mod(Integer x, Integer n)
-        {
-            x %= n;
-            return x < 0? x + n: x;
-        }
-
-        public static Integer[] QuickSquareRoot(Integer y, (Integer p, Integer q) n)
-        {
-            var mp = y.ModPow((n.p + 1) / 4, n.p);
-            var mq = y.ModPow((n.q + 1) / 4, n.q);
-            var N = n.p * n.q;
-
-            var egcd = ExtendedGCD(n.p, n.q);
-            var output = new Integer[4];
-            output[0] = Mod((egcd.u * n.p * mq + egcd.v * n.q * mp), N);
-            output[1] = Mod((egcd.u * n.p * mq - egcd.v * n.q * mp), N);
-            output[2] = N - output[0];
-            output[3] = N - output[2];
-
-
-            return output;
-        }
-
-
 
         // ~~~RandomInteger: ()/(min)/(min, max) - returns random NeinMath Integer~~~ //
         public static Integer RandomI() 
@@ -98,8 +54,10 @@ namespace AsymmetricCryptography.Utils
             } while (!(min < R && R < max));
             return R;
         }
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-        
+
+
         // GeneratePrime(int n) - where n is number of bits in a generated prime number
         public static Integer GeneratePrime(int n)
         {
@@ -120,8 +78,7 @@ namespace AsymmetricCryptography.Utils
 
             return random;
         }
-
-        
+ 
         // GenerateStrongPrime(int n) - where n is number of bits in a generated prime number
         public static Integer GenerateStrongPrime(int n)
         {
@@ -163,6 +120,8 @@ namespace AsymmetricCryptography.Utils
             }
             while (true);
         }
+
+        
 
         // Generate a number of primes and write to file
         private static void GeneratePrimes(int n)
