@@ -42,7 +42,7 @@ namespace AsymmetricCryptography.LabWorks
         private static void Test()
         {
             System.Console.Write("Enter n: ");
-            Integer n = Tools.HexToInteger(Console.ReadLine());
+            Integer n = Tools.ToInteger(Console.ReadLine());
             Integer e = ((Integer)2).Pow(16) + 1;
 
             var user = RSAProvider.KeyAgreementProvider.GetUser((e, n));
@@ -52,7 +52,7 @@ namespace AsymmetricCryptography.LabWorks
             string k1 = Console.ReadLine();
             System.Console.Write("\nEnter s1: ");
             string s1 = Console.ReadLine();
-            System.Console.WriteLine(user.ReceiveKey((Tools.HexToInteger(k1), Tools.HexToInteger(s1))));   
+            System.Console.WriteLine(user.ReceiveKey((Tools.ToInteger(k1), Tools.ToInteger(s1))));   
         }
 
         private static void Extra ()
@@ -63,10 +63,10 @@ namespace AsymmetricCryptography.LabWorks
             var b = ((Integer)24).ToHexString();
             str += a + b;
 
-            k = Tools.HexToInteger(str);
+            k = Tools.ToInteger(str);
 
-            var e = Tools.HexToInteger("10001");
-            var n = Tools.HexToInteger("C056B586E1B79B5CD6740E23F61782B60E48CF47065170F99901EDE06D7B2DC5");
+            var e = Tools.ToInteger("10001");
+            var n = Tools.ToInteger("C056B586E1B79B5CD6740E23F61782B60E48CF47065170F99901EDE06D7B2DC5");
             var user = RSAProvider.KeyAgreementProvider.GetUser((e, n));
 
             var pair = user.SendKey(k);

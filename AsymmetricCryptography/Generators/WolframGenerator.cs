@@ -57,31 +57,6 @@ namespace AsymmetricCryptography.Generators
             return Tools.ToByteArray(bitRes);
         }
 
-        // public static String Result(int size)
-        // {
-        //     double aTime, bTime;
-            
-        //     Random rnd = new Random();
-        //     int seed = rnd.Next();
-
-        //     BitArray bitRes = GenerateSequence(seed, size);
-        //     aTime = (double)stopwatch.ElapsedMilliseconds / 1000;
-            
-        //     stopwatch.Restart();
-        //     String output = BMGeneratorBit.BitToString(bitRes);
-
-        //     BMGeneratorBit.WriteToFile(Path, output, seed);
-        //     stopwatch.Stop();
-        //     bTime = (double)stopwatch.ElapsedMilliseconds / 1000;
-
-        //     Console.WriteLine("\nWolfram BIT generator" + 
-        //     "\nbase (seed): " + seed +
-        //     "\nTime elapsed for sequence generation: " + aTime + " seconds" + 
-        //     "\nTime elapsed for converting to string and writing to file: " + bTime + " seconds");
-
-        //     return output;
-        // }
-
         private static BitArray GenerateSequence(int seed, int size)
         {
             stopwatch.Start();

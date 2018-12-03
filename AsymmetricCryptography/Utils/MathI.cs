@@ -41,9 +41,9 @@ namespace AsymmetricCryptography.Utils
 
             return new Integer[]{
                 (egcd.u * n.p * s1 + egcd.v * n.p * s2) % mod, 
-                (egcd.u * n.p * s1 - egcd.v * n.p * s2) % mod + mod,
+                (egcd.u * n.p * s1 - egcd.v * n.p * s2) % mod + mod * 5,
                 (-egcd.u * n.p * s1 + egcd.v * n.p * s2) % mod,
-                (-egcd.u * n.p * s1 - egcd.v * n.p * s2) % mod + mod
+                (-egcd.u * n.p * s1 - egcd.v * n.p * s2) % mod + mod * 5
             };
         }
 
@@ -104,7 +104,7 @@ namespace AsymmetricCryptography.Utils
 
             container = Tools.ToString(
                     generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
-            random = Tools.HexToInteger(container) | 1;
+            random = Tools.ToInteger(container) | 1;
             var size = random * 2 - 2;
 
             do
@@ -143,7 +143,7 @@ namespace AsymmetricCryptography.Utils
                 {
                     container = Tools.ToString(
                     generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
-                    prime = Tools.HexToInteger(container);
+                    prime = Tools.ToInteger(container);
                     prime |= 1;
                 } while ((prime - 3) % 4 != 0);
                 

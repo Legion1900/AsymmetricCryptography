@@ -68,6 +68,12 @@ namespace AsymmetricCryptography.Utils
             return output;
         }
 
+        public static BitArray ToBitArray(byte[] bytes)
+        {
+
+            return null;
+        }
+
         public static string[] GenerateByteAlphabet()
         {
             var bytes = new byte[256];
@@ -82,29 +88,28 @@ namespace AsymmetricCryptography.Utils
             return bytesToString.Split('-');
         }
 
-        public static Byte[] ToByteArray (BitArray bits){
-            if (bits.Count % 8 != 0){
-                throw new ArgumentOutOfRangeException(nameof(bits), "BitArray length isn't a multiple of 8.");
+        public static byte[] ToByteArray(BitArray n) {
+
+            int size = (int)Math.Ceiling((double) n.Count / 8);
+
+            byte[] bytes = new byte[size];
+            int byteIndex = 0, bitIndex = 0;
+
+            for (int i = 0; i < n.Count; i++) 
+            {
+                if (n[i]) 
+                {
+                    bytes[byteIndex] |= (byte)(1 << (7 - bitIndex));
+                }
+                bitIndex++;
+                if (bitIndex == 8) 
+                {
+                    bitIndex = 0;
+                    byteIndex++;
+                }
             }
-            var bytes = new byte [bits.Count / 8];
-            Reverse(bits).CopyTo(bytes, 0);
 
             return bytes;
-        }
-
-        public static BitArray Reverse(BitArray array)
-        {
-            int length = array.Length;
-            int mid = (length / 2);
-
-            for (int i = 0; i < mid; i++)
-            {
-                bool bit = array[i];
-                array[i] = array[length - i - 1];
-                array[length - i - 1] = bit;
-            }    
-
-            return array;
         }
 
         public static void WriteToFile(string path, string contents, Integer seed)
@@ -112,7 +117,7 @@ namespace AsymmetricCryptography.Utils
             System.IO.File.WriteAllText(path, (contents + "\nseed:" + seed.ToString()));
         }
 
-        public static Integer HexToInteger(string hex)
+        public static Integer ToInteger(string hex)
         {
             return Integer.Parse(BigInteger
                 .Parse(
@@ -121,6 +126,11 @@ namespace AsymmetricCryptography.Utils
                         .Insert(0, "0"),
                     NumberStyles.AllowHexSpecifier)
                 .ToString());
+        }
+    
+        public static Integer ToInteger(BitArray bits)
+        {
+            return Tools.ToInteger(Tools.ToString(Tools.ToByteArray(bits)));
         }
     }
 }

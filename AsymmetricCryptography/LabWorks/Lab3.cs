@@ -1,22 +1,25 @@
-using AsymmetricCryptography.Utils;
-using System.Diagnostics;
-using NeinMath;
 using System;
+using System.Diagnostics;
+using System.Collections;
+using NeinMath;
+using AsymmetricCryptography.Utils;
+using AsymmetricCryptography.Generators.LehmerGenerators;
 
 namespace AsymmetricCryptography.LabWorks
 {
     public class Lab3
     {
+        private static Stopwatch stopwatch = new Stopwatch();
         static void Main()
         {
-            Integer[] nums = new Integer[10];
-            for (int i = 0; i < nums.Length; i++)
-                nums[i] = MathI.GeneratePrime(32);
-            
-            for (int i = 0; i < nums.Length; i++)
+            var ticks = (uint)(int)DateTime.Now.Ticks;
+            var generatorA = new LehmerHigh(ticks);
+
+            for (int i = 0; i <= 8 * 3; i++)
             {
-                System.Console.WriteLine("({0}/{1}) = {2}",
-                    nums[i], nums[i + 1], MathI.JacobiSymbol(nums[i], nums[i + 1]));
+                var a = generatorA.RandomBits(i);
+                if (i < 10) System.Console.WriteLine($"{i}  | {Tools.ToString(a)}");
+                else System.Console.WriteLine($"{i} | {Tools.ToString(a)}");
             }
         }
     }

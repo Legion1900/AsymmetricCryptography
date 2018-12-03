@@ -37,15 +37,16 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
         }
 
         public abstract byte[] RandomBytes(int n);
+        public abstract BitArray RandomBits(int n);
 
         private void Next()
         {
             X = (uint)((A * _x + C) % M);
         }
 
-        BitArray IGenerator.RandomBits(int n)
-        {
-            throw new NotImplementedException();
-        }
+        // BitArray IGenerator.RandomBits(int n)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }

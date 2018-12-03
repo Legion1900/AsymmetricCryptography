@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using System.Collections;
 
 namespace AsymmetricCryptography.Generators.LehmerGenerators
 {
@@ -18,6 +19,11 @@ namespace AsymmetricCryptography.Generators.LehmerGenerators
             }
 
             return output;
+        }
+
+        public override BitArray RandomBits(int n)
+        {
+            throw new NotImplementedException();
         }
     }
 }
