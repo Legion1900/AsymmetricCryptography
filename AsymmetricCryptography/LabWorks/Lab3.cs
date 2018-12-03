@@ -4,6 +4,7 @@ using System.Collections;
 using NeinMath;
 using AsymmetricCryptography.Utils;
 using AsymmetricCryptography.Generators.LehmerGenerators;
+using AsymmetricCryptography.Cryptosystems.Rabin;
 
 namespace AsymmetricCryptography.LabWorks
 {
@@ -12,7 +13,7 @@ namespace AsymmetricCryptography.LabWorks
         private static Stopwatch stopwatch = new Stopwatch();
         static void Main()
         {
-            
+
         }
     }
 }

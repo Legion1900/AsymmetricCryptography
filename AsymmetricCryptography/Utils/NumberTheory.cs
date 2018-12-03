@@ -93,12 +93,19 @@ namespace AsymmetricCryptography.Utils
             return ans;
         }
 
-        public static int IversonBracket(Integer a, Integer b)
+        public static bool IversonBracket(Integer a, Integer b)
         {
-            var jacobi = JacobiSymbol(a, b);
-            if (jacobi == 1) 
-                return 1;
-            else return 0;
+            return JacobiSymbol(a, b) == 1;
+        }
+
+        public static bool C1 (Integer x, Integer n, Integer b)
+        {
+            return ((x + b * ((Integer)2).ModInv(n)) % n) % 2 == 1;
+        }
+
+        public static bool C2 (Integer x, Integer n, Integer b)
+        {
+            return NumberTheory.IversonBracket(x + b * ((Integer)2).ModInv(n), n);
         }
     }
 }
