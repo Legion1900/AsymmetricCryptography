@@ -41,7 +41,7 @@ namespace AsymmetricCryptography.Utils
             };
         }
         
-        public static Integer JacobiSymbol(Integer a, Integer b)
+        public static int JacobiSymbol(Integer a, Integer b)
         {
             // Mutual simlicity check
             if (GCD(a, b) != 1)
@@ -84,6 +84,14 @@ namespace AsymmetricCryptography.Utils
             }
 
             return ans;
+        }
+
+        public static int IversonBracket(Integer a, Integer b)
+        {
+            var jacobi = JacobiSymbol(a, b);
+            if (jacobi == 1) 
+                return 1;
+            else return 0;
         }
     }
 }
