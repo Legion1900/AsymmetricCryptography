@@ -28,7 +28,7 @@ namespace AsymmetricCryptography.Utils
             while (k != 0)
             {
                 x = MathI.RandomI(1, p);
-                if (MathI.GCD(x, p) != 1) return false;
+                if (NumberTheory.GCD(x, p) != 1) return false;
 
                 modPow = x.ModPow(d, p);
                 if (modPow == 1 || modPow == p - 1)

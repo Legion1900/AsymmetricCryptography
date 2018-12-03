@@ -132,5 +132,10 @@ namespace AsymmetricCryptography.Utils
         {
             return Tools.ToInteger(Tools.ToString(Tools.ToByteArray(bits)));
         }
+
+        public static int BitLength(Integer num)
+        {
+            return (int)num.Log(2) + 1;
+        }
     }
 }
