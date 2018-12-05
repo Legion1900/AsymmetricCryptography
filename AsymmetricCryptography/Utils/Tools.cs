@@ -137,5 +137,10 @@ namespace AsymmetricCryptography.Utils
         {
             return (int)num.Log(2) + 1;
         }
+
+        public static int ByteLength(Integer num)
+        {
+            return (int)Math.Ceiling((double)BitLength(num) / 8);
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
 
         public RabinProvider()
         {
-            var length = 32;
+            var length = 64;
 
             PrivateKey.p = MathI.GenerateBlumPrime(length);
             PrivateKey.q = MathI.GenerateBlumPrime(length);
@@ -26,7 +26,8 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             int l = Tools.BitLength(publicKey.n) / 8;
             int mLength = Tools.BitLength(m) / 8;
             if (mLength > l - 10)
-                throw new ArgumentOutOfRangeException(nameof(m), m, $"Message should be no longer than {l - 10} bits");
+                throw new ArgumentOutOfRangeException(nameof(m), m, $"Message should be no longer than " + 
+                $"{Tools.ByteLength(publicKey.n)} - {10} bytes");
             var x = FormatMessage(m);
             var y = x * (x + publicKey.b) % publicKey.n;
 
@@ -62,9 +63,10 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             int nLength = Tools.BitLength(PublicKey.n) / 8;
             int mLength = Tools.BitLength(m) / 8;
 
-            if (mLength > nLength - 10 || 2 * mLength < nLength || mLength < 1)
+            if (mLength > nLength - 10 || 2 * mLength > nLength || mLength < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(m), m, "The message you chose is either too large or < 1.");
+                throw new ArgumentOutOfRangeException(nameof(m), m, "The message you chose is either too large or too small." + 
+                $"\n{mLength} >? {nLength - 10}   |   {2 * mLength} <? {nLength}");
             }
             // 8 bytes = 64 bits
             var r = MathI.GeneratePrime(64);
@@ -75,24 +77,24 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
         private Integer InverseFormatMessage(Integer m)
         {
             var tmp = m.ToByteArray();
-            var shiftCount = Tools.BitLength(PublicKey.n) / 8 - 2; // = L - 2
-            int size = shiftCount - 8 - 2; // 1 | 1 | m | r
+            var nLength = Tools.BitLength(PublicKey.n) / 8;
+            var shiftCount = nLength - 2;
+            int mLength = shiftCount - 8 - 2; // 1 | 1 | m | r
             
-            if (size < 1 || size >= shiftCount - 8) // since we already subtracted 2
+            if (mLength > nLength - 10 || mLength < 1) // since we already subtracted 2
             {
                 throw new ArgumentOutOfRangeException("The message formatting was wrong.");
             }
 
-            var k = size - 1;
-            var container = new byte[size];
-            for(int i = 8; i < 8 + size; i++)
+            var k = mLength - 1;
+            var container = new byte[mLength];
+            for(int i = 8; i < 8 + mLength; i++)
             {
                 container[k] = tmp[i];
                 k--;
             }
             
             var output = Tools.ToInteger(Tools.ToString(container));
-            System.Console.WriteLine($"size: {size} | output: {output.ToHexString()}");
 
             return output;
         }
