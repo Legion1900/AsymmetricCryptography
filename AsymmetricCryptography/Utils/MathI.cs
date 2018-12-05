@@ -100,7 +100,7 @@ namespace AsymmetricCryptography.Utils
             {
                 do
                 {
-                    prime = Tools.ToInteger(generator.RandomBits(n));
+                    prime = Tools.ToInteger(generator.RandomBits(n)); 
                     prime |= 1;
                 } while ((prime - 3) % 4 != 0);
                 

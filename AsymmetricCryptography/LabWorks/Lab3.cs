@@ -13,32 +13,34 @@ namespace AsymmetricCryptography.LabWorks
         private static Stopwatch stopwatch = new Stopwatch();
         static void Main()
         {
-            System.Console.WriteLine("userA");
             var userA = new RabinProvider();
-            System.Console.WriteLine("\nuserB");
             var userB = new RabinProvider();
 
             var seed = (uint)DateTime.Now.Ticks;
             var generator = new LehmerHigh(seed);
-            int k = 0;
-            
-            for (int i = 0; i < 100; i++)
+            double n = 1000;
+
+
+            int k = 0, j = 32;
+            System.Console.WriteLine($"message length: {j * 8} bytes");
+            System.Console.WriteLine($"user A modulus length: {Tools.BitLength(userA.PublicKey.n)}");
+            System.Console.WriteLine($"user A modulus length: {Tools.BitLength(userB.PublicKey.n)}");
+            for (double i = 1; i < n+1; i++)
             {
                 var message = Tools.ToInteger(
-                    generator.RandomBits(8 * 5));
+                    generator.RandomBits(8 * j));
 
                 var encrypted = userA.Encrypt(message, userB.PublicKey);
                 var decrypted = userB.Decrypt(encrypted);
 
+                
                 if (message == decrypted)
                 {
                     k++;
                 }
+                Console.Write($"\r{(int)(i / n * 100)}% | {k}/{n} decrypted rightly");
             }
-
             System.Console.WriteLine();
-            System.Console.WriteLine($"number of rightly decrypted messages = {k}");
-            
         }
     }
 }
