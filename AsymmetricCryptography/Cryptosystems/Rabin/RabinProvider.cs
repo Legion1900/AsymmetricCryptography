@@ -67,6 +67,31 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             throw new Exception("Decrypt failed, c1 || c2 didn't coincide.");
         }
 
+        public (Integer m, Integer s) Sign(Integer m)
+        {
+            var x = FormatMessage(m, PublicKey);
+            var jacobiP = NumberTheory.IversonBracket(x, PrivateKey.p);
+            var jacobiQ = NumberTheory.IversonBracket(x, PrivateKey.q);
+            while (!(jacobiP && jacobiQ))
+            {
+                x = FormatMessage(m, PublicKey);
+                jacobiP = NumberTheory.IversonBracket(x, PrivateKey.p);
+                jacobiQ = NumberTheory.IversonBracket(x, PrivateKey.q);
+            }
+
+            var roots = NumberTheory.QuickSquareRoot(x, PrivateKey);
+            Random rand = new Random();
+            return (m, roots[rand.Next(0, roots.Length)]);
+        }
+
+        public bool Verify((Integer m, Integer s) sign, (Integer n, Integer b) publicKey)
+        {
+            var x = sign.s.Pow(2) % publicKey.n;
+            return x == FormatMessage(sign.m, publicKey);
+        }
+
+
+
         private Integer FormatMessage(Integer m, (Integer n, Integer b) publicKey)
         {
             int nLength = Tools.ByteLength(publicKey.n); 
@@ -84,7 +109,7 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             return output;
         }
 
-        public Integer InverseFormatMessage(Integer m)
+        private Integer InverseFormatMessage(Integer m)
         {
             var tmp = m.ToByteArray();
             var nLength = Tools.ByteLength(PublicKey.n);
