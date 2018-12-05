@@ -61,51 +61,46 @@ namespace AsymmetricCryptography.Utils
         // GeneratePrime(int n) - where n is number of bits in a generated prime number
         public static Integer GeneratePrime(int n)
         {
-            String container;
-            Integer random;
             var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
 
-            container = Tools.ToString(
-                    generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
-            random = Tools.ToInteger(container) | 1;
-            var size = random * 2 - 2;
+            var rand = Tools.ToInteger(generator.RandomBits(n));
+            rand |= 1;
+            
+            var size = rand * 2 - 2;
 
             do
             {
-                random += 2;
+                rand += 2;
             }
-            while(!(PrimalityTests.MillerRabin(random) && random != size));
+            while(!(PrimalityTests.MillerRabin(rand) && rand != size));
 
-            return random;
+            return rand;
         }
  
         // GenerateStrongPrime(int n) - where n is number of bits in a generated prime number
         public static Integer GenerateStrongPrime(int n)
         {
-            Integer prime;
+            Integer rand;
             int i = 1;
             do
             {
-                prime = 2 * i * GeneratePrime(n) + 1;
+                rand = 2 * i * GeneratePrime(n) + 1;
                 i++;
-            } while(!PrimalityTests.MillerRabin(prime));
+            } while(!PrimalityTests.MillerRabin(rand));
             
-            return prime;
+            return rand;
         }
 
         public static Integer GenerateBlumPrime(int n)
         {
             Integer prime;
-            String container;
             var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
             
             do
             {
                 do
                 {
-                    container = Tools.ToString(
-                    generator.RandomBytes(n)).Replace(" ", String.Empty).Insert(0, "0");
-                    prime = Tools.ToInteger(container);
+                    prime = Tools.ToInteger(generator.RandomBits(n));
                     prime |= 1;
                 } while ((prime - 3) % 4 != 0);
                 

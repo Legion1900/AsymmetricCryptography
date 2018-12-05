@@ -13,7 +13,11 @@ namespace AsymmetricCryptography.LabWorks
         private static Stopwatch stopwatch = new Stopwatch();
         static void Main()
         {
+            var userA = new RabinProvider();
+            var userB = new RabinProvider();
 
+            
+            
         }
     }
 }

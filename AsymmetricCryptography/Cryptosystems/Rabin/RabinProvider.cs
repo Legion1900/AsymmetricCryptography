@@ -13,23 +13,25 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
 
         public RabinProvider()
         {
-            PrivateKey.p = MathI.GenerateBlumPrime(32);
-            PrivateKey.q = MathI.GenerateBlumPrime(32);
+            var length = 32;
+
+            PrivateKey.p = MathI.GenerateBlumPrime(length);
+            PrivateKey.q = MathI.GenerateBlumPrime(length);
             PublicKey.n = PrivateKey.p * PrivateKey.q;
             PublicKey.b = MathI.RandomI(0, PublicKey.n);
         }
 
         public (Integer y, bool c1, bool c2) Encrypt(Integer m, (Integer n, Integer b) publicKey)
         {
-            int l = Tools.BitLength(PublicKey.n) / 8;
+            int l = Tools.BitLength(publicKey.n) / 8;
             int mLength = Tools.BitLength(m) / 8;
             if (mLength > l - 10)
                 throw new ArgumentOutOfRangeException(nameof(m), m, $"Message should be no longer than {l - 10} bits");
             var x = FormatMessage(m);
             var y = x * (x + publicKey.b) % publicKey.n;
-        
+
             return (y, 
-                NumberTheory.C1(x, publicKey.n, publicKey.b), 
+                NumberTheory.C1(x, publicKey.n, publicKey.b),
                 NumberTheory.C2(x, publicKey.n, publicKey.b));
         }
 
@@ -55,11 +57,33 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             return null;
         }
 
-        public static Integer InverseFormatMessage(Integer m)
+        private Integer FormatMessage(Integer m)
+        {
+            int nLength = Tools.BitLength(PublicKey.n) / 8;
+            int mLength = Tools.BitLength(m) / 8;
+
+            if (mLength > nLength - 10 || 2 * mLength < nLength || mLength < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(m), m, "The message you chose is either too large or < 1.");
+            }
+            // 8 bytes = 64 bits
+            var r = MathI.GeneratePrime(64);
+
+            return 255 * ((Integer)2).Pow(8 * (nLength - 2)) + m * ((Integer)2).Pow(64) + r;
+        }
+
+        private Integer InverseFormatMessage(Integer m)
         {
             var tmp = m.ToByteArray();
-            int size = tmp.Length - 10, k = size-1;
+            var shiftCount = Tools.BitLength(PublicKey.n) / 8 - 2; // = L - 2
+            int size = shiftCount - 8 - 2; // 1 | 1 | m | r
+            
+            if (size < 1 || size >= shiftCount - 8) // since we already subtracted 2
+            {
+                throw new ArgumentOutOfRangeException("The message formatting was wrong.");
+            }
 
+            var k = size - 1;
             var container = new byte[size];
             for(int i = 8; i < 8 + size; i++)
             {
@@ -68,21 +92,9 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             }
             
             var output = Tools.ToInteger(Tools.ToString(container));
+            System.Console.WriteLine($"size: {size} | output: {output.ToHexString()}");
 
             return output;
-        }
-
-        private Integer FormatMessage(Integer m)
-        {
-            int l = Tools.BitLength(PublicKey.n) / 8;
-            // 8 bytes = 64 bits
-            var r = MathI.GeneratePrime(8);
-            Integer tmp = 2;
-            r |= tmp.Pow(63);
-
-            System.Console.WriteLine($"length of r: {Tools.BitLength(r)}");
-
-            return 255 * tmp.Pow(8 * (l - 8)) + m * tmp.Pow(64) + r;
         }
     }
 }
