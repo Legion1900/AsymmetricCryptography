@@ -19,6 +19,17 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             PrivateKey.q = MathI.GenerateBlumPrime(length);
             PublicKey.n = PrivateKey.p * PrivateKey.q;
             PublicKey.b = MathI.RandomI(0, PublicKey.n);
+
+            System.Console.WriteLine($"private key " + 
+            $"(p = {Tools.ByteLength(PrivateKey.q)} bytes, " + 
+            $"q = {Tools.ByteLength(PrivateKey.q)} bytes)): " +
+            $"({PrivateKey.p.ToHexString()}, {PrivateKey.q.ToHexString()})");
+
+            System.Console.WriteLine($"public key " + 
+            $"(n = {Tools.ByteLength(PublicKey.n)} bytes, " + 
+            $"b = {Tools.ByteLength(PublicKey.b)} bytes)): " +
+            $"({PublicKey.n.ToHexString()}, {PublicKey.b.ToHexString()})");
+
         }
 
         public (Integer y, bool c1, bool c2) Encrypt(Integer m, (Integer n, Integer b) publicKey)
@@ -31,7 +42,6 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             var x = FormatMessage(m, publicKey);
             var y = (x * (x + publicKey.b)) % publicKey.n;
 
-            System.Console.WriteLine($"encrypted: {y.ToHexString()}");
             return (y, 
                 NumberTheory.C1(x, publicKey.n, publicKey.b),
                 NumberTheory.C2(x, publicKey.n, publicKey.b));
