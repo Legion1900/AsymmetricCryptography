@@ -140,7 +140,8 @@ namespace AsymmetricCryptography.Utils
 
         public static int ByteLength(Integer num)
         {
-            return (int)Math.Ceiling((double)BitLength(num) / 8);
+            var d = Math.Ceiling((double)BitLength(num) / 8);
+            return (int)d;
         }
     }
 }

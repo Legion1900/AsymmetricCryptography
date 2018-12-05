@@ -21,13 +21,20 @@ namespace AsymmetricCryptography.LabWorks
             var message = Tools.ToInteger(
                 generator.RandomBits(8 * 4));
 
-            System.Console.WriteLine($"message: {message}");
-
+            
             var encrypted = userA.Encrypt(message, userB.PublicKey);
-            System.Console.WriteLine($"encrypted: {encrypted}");
+            // System.Console.WriteLine($"encrypted: {encrypted}\n");
             
             var decrypted = userB.Decrypt(encrypted);
-            System.Console.WriteLine($"decrypted: {decrypted}");
+            if (decrypted != null)
+            {
+                // System.Console.WriteLine($"\ndecrypted: {decrypted} | length: {Tools.ByteLength((Integer)decrypted)}");
+            }
+            else 
+            {
+                System.Console.WriteLine("wut");
+            }
+            
         }
     }
 }

@@ -28,8 +28,8 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             if (mLength > l - 10)
                 throw new ArgumentOutOfRangeException(nameof(m), m, $"Message should be no longer than " + 
                 $"{Tools.ByteLength(publicKey.n)} - {10} bytes");
-            var x = FormatMessage(m);
-            var y = x * (x + publicKey.b) % publicKey.n;
+            var x = FormatMessage(m, publicKey);
+            var y = (x * (x + publicKey.b)) % publicKey.n;
 
             return (y, 
                 NumberTheory.C1(x, publicKey.n, publicKey.b),
@@ -42,7 +42,7 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             var inversed4 = ((Integer)4).ModInv(PublicKey.n);
 
             var roots = NumberTheory.QuickSquareRoot(
-                encrypted.y + PublicKey.b.ModPow(2, PublicKey.n) * inversed4, PrivateKey);   
+                (encrypted.y + PublicKey.b.ModPow(2, PublicKey.n) * inversed4) % PublicKey.n, PrivateKey);   
             roots[0] = PublicKey.b;
 
             foreach (var root in roots)
@@ -58,9 +58,9 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             return null;
         }
 
-        private Integer FormatMessage(Integer m)
+        private Integer FormatMessage(Integer m, (Integer n, Integer b) publicKey)
         {
-            int nLength = Tools.BitLength(PublicKey.n) / 8;
+            int nLength = Tools.BitLength(publicKey.n) / 8;
             int mLength = Tools.BitLength(m) / 8;
 
             if (mLength > nLength - 10 || 2 * mLength > nLength || mLength < 1)
@@ -70,11 +70,12 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             }
             // 8 bytes = 64 bits
             var r = MathI.GeneratePrime(64);
+            var output = 255 * ((Integer)2).Pow(8 * (nLength - 2)) + m * ((Integer)2).Pow(64) + r;
 
-            return 255 * ((Integer)2).Pow(8 * (nLength - 2)) + m * ((Integer)2).Pow(64) + r;
+            return output;
         }
 
-        private Integer InverseFormatMessage(Integer m)
+        public Integer InverseFormatMessage(Integer m)
         {
             var tmp = m.ToByteArray();
             var nLength = Tools.BitLength(PublicKey.n) / 8;
