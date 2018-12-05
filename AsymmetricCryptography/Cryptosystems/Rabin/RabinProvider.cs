@@ -31,23 +31,26 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             var x = FormatMessage(m, publicKey);
             var y = (x * (x + publicKey.b)) % publicKey.n;
 
+            System.Console.WriteLine($"encrypted: {y.ToHexString()}");
             return (y, 
                 NumberTheory.C1(x, publicKey.n, publicKey.b),
                 NumberTheory.C2(x, publicKey.n, publicKey.b));
         }
 
-        public Integer? Decrypt((Integer y, bool c1, bool c2) encrypted)
+        public Integer Decrypt((Integer y, bool c1, bool c2) encrypted)
         {
-            var inversed2 = ((Integer)2).ModInv(PublicKey.n);
-            var inversed4 = ((Integer)4).ModInv(PublicKey.n);
+            var inv2 = ((Integer)2).ModInv(PublicKey.n);
+            var inv4 = ((Integer)4).ModInv(PublicKey.n);
+
+            var bPow2 = PublicKey.b.ModPow(2, PublicKey.n);
 
             var roots = NumberTheory.QuickSquareRoot(
-                (encrypted.y + PublicKey.b.ModPow(2, PublicKey.n) * inversed4) % PublicKey.n, PrivateKey);   
-            roots[0] = PublicKey.b;
+                NumberTheory.Mod(encrypted.y + bPow2 * inv4, PublicKey.n),
+                PrivateKey);
 
             foreach (var root in roots)
             {
-                var x = - PublicKey.b * inversed2 + root;
+                var x = NumberTheory.Mod(-PublicKey.b * inv2 + root, PublicKey.n);
                 if (encrypted.c1 == NumberTheory.C1(x, PublicKey.n, PublicKey.b) 
                 && encrypted.c2 == NumberTheory.C2(x, PublicKey.n, PublicKey.b))
                 {
@@ -55,12 +58,12 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
                 }
             };
 
-            return null;
+            throw new Exception("Decrypt failed, c1 || c2 didn't coincide.");
         }
 
         private Integer FormatMessage(Integer m, (Integer n, Integer b) publicKey)
         {
-            int nLength = Tools.BitLength(publicKey.n) / 8;
+            int nLength = Tools.BitLength(publicKey.n) / 8; 
             int mLength = Tools.BitLength(m) / 8;
 
             if (mLength > nLength - 10 || 2 * mLength > nLength || mLength < 1)

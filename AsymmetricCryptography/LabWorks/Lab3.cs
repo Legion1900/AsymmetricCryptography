@@ -23,18 +23,8 @@ namespace AsymmetricCryptography.LabWorks
 
             
             var encrypted = userA.Encrypt(message, userB.PublicKey);
-            // System.Console.WriteLine($"encrypted: {encrypted}\n");
             
             var decrypted = userB.Decrypt(encrypted);
-            if (decrypted != null)
-            {
-                // System.Console.WriteLine($"\ndecrypted: {decrypted} | length: {Tools.ByteLength((Integer)decrypted)}");
-            }
-            else 
-            {
-                System.Console.WriteLine("wut");
-            }
-            
         }
     }
 }
