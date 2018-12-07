@@ -7,35 +7,30 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
 {
     public class RabinProvider
     {
-        private readonly (Integer p, Integer q) privateKey;
+        private readonly (Integer p, Integer q) PrivateKey;
 
         public readonly (Integer n, Integer b) PublicKey;
 
         public RabinProvider()
         {
-            var length = 64;
+            var length = 32 * 8;
 
-            privateKey.p = MathI.GenerateBlumPrime(length);
-            privateKey.q = MathI.GenerateBlumPrime(length);
-            PublicKey.n = privateKey.p * privateKey.q;
+            PrivateKey.p = MathI.GenerateBlumPrime(length);
+            PrivateKey.q = MathI.GenerateBlumPrime(length);
+            PublicKey.n = PrivateKey.p * PrivateKey.q;
             PublicKey.b = MathI.RandomI(0, PublicKey.n);
+        }
 
-            System.Console.WriteLine($"private key " + 
-            $"(p = {Tools.ByteLength(privateKey.q)} bytes, " + 
-            $"q = {Tools.ByteLength(privateKey.q)} bytes)): " +
-            $"({privateKey.p.ToHexString()}, {privateKey.q.ToHexString()})");
-
-            System.Console.WriteLine($"public key " + 
-            $"(n = {Tools.ByteLength(PublicKey.n)} bytes, " + 
-            $"b = {Tools.ByteLength(PublicKey.b)} bytes)): " +
-            $"({PublicKey.n.ToHexString()}, {PublicKey.b.ToHexString()})");
-
+        public RabinProvider(int pLength, int qLength)
+        {
+            PublicKey.n = PrivateKey.p * PrivateKey.q;
+            PublicKey.b = MathI.RandomI(0, PublicKey.n);
         }
 
         public (Integer y, bool c1, bool c2) Encrypt(Integer m, (Integer n, Integer b) publicKey)
         {
-            int l = Tools.BitLength(publicKey.n) / 8;
-            int mLength = Tools.BitLength(m) / 8;
+            int l = Tools.ByteLength(publicKey.n);
+            int mLength = Tools.ByteLength(m);
             if (mLength > l - 10)
                 throw new ArgumentOutOfRangeException(nameof(m), m, $"Message should be no longer than " + 
                 $"{Tools.ByteLength(publicKey.n)} - {10} bytes");
@@ -56,36 +51,37 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
 
             var roots = NumberTheory.QuickSquareRoot(
                 NumberTheory.Mod(encrypted.y + bPow2 * inv4, PublicKey.n),
-                privateKey);
+                PrivateKey);
 
             foreach (var root in roots)
             {
                 var x = NumberTheory.Mod(-PublicKey.b * inv2 + root, PublicKey.n);
                 if (encrypted.c1 == NumberTheory.C1(x, PublicKey.n, PublicKey.b) 
-                && encrypted.c2 == NumberTheory.C2(x, PublicKey.n, PublicKey.b))
+                    && encrypted.c2 == NumberTheory.C2(x, PublicKey.n, PublicKey.b))
                 {
                     return InverseFormatMessage(x);
                 }
             };
 
+            return 0;
             throw new Exception("Decrypt failed, c1 || c2 didn't coincide.");
         }
 
         public (Integer m, Integer s) Sign(Integer m)
         {
             var x = FormatMessage(m, PublicKey);
-            var jacobiP = NumberTheory.IversonBracket(x, privateKey.p);
-            var jacobiQ = NumberTheory.IversonBracket(x, privateKey.q);
+            var jacobiP = NumberTheory.IversonBracket(x, PrivateKey.p);
+            var jacobiQ = NumberTheory.IversonBracket(x, PrivateKey.q);
             while (!(jacobiP && jacobiQ))
             {
                 x = FormatMessage(m, PublicKey);
-                jacobiP = NumberTheory.IversonBracket(x, privateKey.p);
-                jacobiQ = NumberTheory.IversonBracket(x, privateKey.q);
+                jacobiP = NumberTheory.IversonBracket(x, PrivateKey.p);
+                jacobiQ = NumberTheory.IversonBracket(x, PrivateKey.q);
             }
             
             System.Console.WriteLine($"Jacobi(p): {jacobiP} \nJacobi(q): {jacobiQ}");
 
-            var roots = NumberTheory.QuickSquareRoot(x, privateKey);
+            var roots = NumberTheory.QuickSquareRoot(x, PrivateKey);
             Random rand = new Random();
             return (m, roots[rand.Next(0, roots.Length)]);
         }
@@ -98,8 +94,8 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
 
         private Integer FormatMessage(Integer m, (Integer n, Integer b) publicKey)
         {
-            int nLength = Tools.BitLength(publicKey.n) / 8; 
-            int mLength = Tools.BitLength(m) / 8;
+            int nLength = Tools.ByteLength(publicKey.n); 
+            int mLength = Tools.ByteLength(m);
 
             if (mLength > nLength - 10 || 2 * mLength > nLength || mLength < 1)
             {
@@ -116,7 +112,7 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
         private Integer InverseFormatMessage(Integer m)
         {
             var tmp = m.ToByteArray();
-            var nLength = Tools.BitLength(PublicKey.n) / 8;
+            var nLength = Tools.ByteLength(PublicKey.n);
             var shiftCount = nLength - 2;
             int mLength = shiftCount - 8 - 2; // 1 | 1 | m | r
             

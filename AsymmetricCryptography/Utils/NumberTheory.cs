@@ -31,21 +31,21 @@ namespace AsymmetricCryptography.Utils
             return x < 0? x + n: x;
         }
 
-        public static Integer[] QuickSquareRoot(Integer y, (Integer p, Integer q) n)
+        public static Integer[] QuickSquareRoot(Integer y, (Integer P, Integer Q) n)
         {
 
-            var s1 = y.ModPow((n.p + 1) / 4, n.p);
-            var s2 = y.ModPow((n.q + 1) / 4, n.q);
-            var N = n.p * n.q;
+            var mP = y.ModPow((n.P + 1) / 4, n.P);
+            var mQ = y.ModPow((n.Q + 1) / 4, n.Q);
+            var N = n.P * n.Q;
 
-            var egcd = ExtendedGCD(n.p, n.q);
+            var egcd = ExtendedGCD(n.P, n.Q);
             
             var output = new Integer[4];
 
-            output[0] = Mod(egcd.u * n.p * s2 + egcd.v * n.q * s1, N);
-            output[1] = Mod(egcd.u * n.p * s2 - egcd.v * n.q * s1, N);
-            output[2] = Mod(-egcd.u * n.p * s2 + egcd.v * n.q * s1, N);
-            output[3] = Mod(-egcd.u * n.p * s2 - egcd.v * n.q * s1, N);
+            output[0] = Mod(egcd.u * n.P * mQ + egcd.v * n.Q * mP, N);
+            output[1] = Mod(egcd.u * n.P * mQ - egcd.v * n.Q * mP, N);
+            output[2] = Mod(-egcd.u * n.P * mQ + egcd.v * n.Q * mP, N);
+            output[3] = Mod(-egcd.u * n.P * mQ - egcd.v * n.Q * mP, N);
 
             return output;
         }
