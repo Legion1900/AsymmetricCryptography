@@ -82,6 +82,8 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
                 jacobiP = NumberTheory.IversonBracket(x, privateKey.p);
                 jacobiQ = NumberTheory.IversonBracket(x, privateKey.q);
             }
+            
+            System.Console.WriteLine($"Jacobi(p): {jacobiP} \nJacobi(q): {jacobiQ}");
 
             var roots = NumberTheory.QuickSquareRoot(x, privateKey);
             Random rand = new Random();
@@ -91,10 +93,8 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
         public bool Verify((Integer m, Integer s) sign, (Integer n, Integer b) publicKey)
         {
             var x = sign.s.Pow(2) % publicKey.n;
-            return x == FormatMessage(sign.m, publicKey);
+            return InverseFormatMessage(x) == sign.m;
         }
-
-
 
         private Integer FormatMessage(Integer m, (Integer n, Integer b) publicKey)
         {
