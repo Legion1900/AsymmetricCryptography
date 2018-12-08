@@ -13,3 +13,4 @@ obj/
 *.p7s
 *.dll
 *.xml
+AsymmetricCryptography/LabWorks/ThreadTest.cs

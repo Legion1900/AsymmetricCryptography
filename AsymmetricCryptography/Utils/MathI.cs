@@ -13,28 +13,23 @@ namespace AsymmetricCryptography.Utils
         // ~~~RandomInteger: ()/(min)/(min, max) - returns random NeinMath Integer~~~ //
         public static Integer RandomI() 
         {
-            Random random = new Random();
-            byte[] bytes = new byte[random.Next(2, 64)];
-            Integer R;
+            var seed = (uint)DateTime.Now.Ticks;
+            var generator = new LehmerHigh(seed);
 
-            random.NextBytes (bytes);
-            bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
-            R = Integer.Parse((new BigInteger (bytes)).ToString());
+            var R = Tools.ToInteger(generator.RandomBits(64 * 8));
 
             return R;
         }
 
         public static Integer RandomI(Integer min) 
         {
-            Random random = new Random();
-            byte[] bytes = new byte [random.Next(2, 64)];
+            var seed = (uint)DateTime.Now.Ticks;
+            var generator = new LehmerHigh(seed);
             Integer R;
 
             do 
             {
-                random.NextBytes (bytes);
-                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
-                R = Integer.Parse((new BigInteger (bytes)).ToString());
+                R = Tools.ToInteger(generator.RandomBits(64 * 8));
             } while (!(min < R));
 
             return R;
@@ -42,15 +37,15 @@ namespace AsymmetricCryptography.Utils
 
         public static Integer RandomI(Integer min, Integer max) 
         {
-            Random random = new Random();
-            byte[] bytes = max.ToByteArray ();
+            var seed = (uint)DateTime.Now.Ticks;
+            var generator = new LehmerHigh(seed);
+            var bitLength = Tools.BitLength(max);
             Integer R;
 
             do 
             {
-                random.NextBytes (bytes);
-                bytes [bytes.Length - 1] &= (byte)0x7F; //force sign bit to positive
-                R = Integer.Parse((new BigInteger (bytes)).ToString());
+                R = NumberTheory.Mod(
+                    Tools.ToInteger(generator.RandomBits(bitLength + 1)), max + 1);
             } while (!(min < R && R < max));
             return R;
         }
@@ -59,11 +54,11 @@ namespace AsymmetricCryptography.Utils
 
 
         // GeneratePrime(int n) - where n is number of bits in a generated prime number
-        public static Integer GeneratePrime(int n)
+        public static Integer GeneratePrime(int bitLength)
         {
             var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
 
-            var rand = Tools.ToInteger(generator.RandomBits(n));
+            var rand = Tools.ToInteger(generator.RandomBits(bitLength));
             rand |= 1;
             
             var size = rand * 2 - 2;
@@ -78,38 +73,38 @@ namespace AsymmetricCryptography.Utils
         }
  
         // GenerateStrongPrime(int n) - where n is number of bits in a generated prime number
-        public static Integer GenerateStrongPrime(int n)
+        public static Integer GenerateStrongPrime(int bitLength)
         {
             Integer rand;
             int i = 1;
             do
             {
-                rand = 2 * i * GeneratePrime(n) + 1;
+                rand = 2 * i * GeneratePrime(bitLength) + 1;
                 i++;
             } while(!PrimalityTests.MillerRabin(rand));
             
             return rand;
         }
 
-        public static Integer GenerateBlumPrime(int n)
+        public static Integer GenerateBlumPrime(int bitLength)
         {
-            Integer prime;
+            Integer rand;
             var generator = new LehmerHigh((uint)(int)DateTime.Now.Ticks);
             
             do
             {
                 do
                 {
-                    prime = Tools.ToInteger(generator.RandomBits(n)); 
-                    prime |= 1;
-                } while ((prime - 3) % 4 != 0);
+                    rand = Tools.ToInteger(generator.RandomBits(bitLength)); 
+                    rand |= 1;
+                } while ((rand - 3) % 4 != 0);
                 
-                while (prime != 2 * prime - 4)
+                while (rand != 2 * rand - 4)
                 {
-                    prime += 4;
-                    if (PrimalityTests.MillerRabin(prime))
+                    rand += 4;
+                    if (PrimalityTests.MillerRabin(rand))
                     {
-                        return prime;
+                        return rand;
                     }
                 }
             }
