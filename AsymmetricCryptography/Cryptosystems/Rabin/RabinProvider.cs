@@ -35,7 +35,11 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
                 throw new ArgumentOutOfRangeException(nameof(m), m, $"Message should be no longer than " + 
                 $"{Tools.ByteLength(publicKey.n)} - {10} bytes");
             var x = FormatMessage(m, publicKey);
+            System.Console.WriteLine($"formatted(encrypt): {x}");
+            System.Console.WriteLine($"length: {Tools.ByteLength(x)}");
+
             var y = (x * (x + publicKey.b)) % publicKey.n;
+            System.Console.WriteLine($"encrypted: {y}");
 
             return (y, 
                 NumberTheory.C1(x, publicKey.n, publicKey.b),
@@ -79,8 +83,6 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
                 jacobiQ = NumberTheory.IversonBracket(x, PrivateKey.q);
             }
             
-            System.Console.WriteLine($"Jacobi(p): {jacobiP} \nJacobi(q): {jacobiQ}");
-
             var roots = NumberTheory.QuickSquareRoot(x, PrivateKey);
             Random rand = new Random();
             return (m, roots[rand.Next(0, roots.Length)]);
@@ -130,6 +132,9 @@ namespace AsymmetricCryptography.Cryptosystems.Rabin
             }
             
             var output = Tools.ToInteger(Tools.ToString(container));
+
+            System.Console.WriteLine($"decrypted: {m}");
+            System.Console.WriteLine($"length: {Tools.ByteLength(m)}");
 
             return output;
         }

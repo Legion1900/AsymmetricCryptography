@@ -16,13 +16,64 @@ namespace AsymmetricCryptography.LabWorks
 
         static void Main()
         {
-            ZKPCracker();
+            Extra();
+            // ServerExtra();
+            // ServerVerify();
+            // ZKPCracker();
+        }
+
+        private static void Extra()
+        {
+            var userA = new RabinProvider();
+            var userB = new RabinProvider();
+            var m = MathI.RandomI(100, 1000);
+            System.Console.WriteLine($"Message to cypher: {m.ToHexString()}");
+
+            var encrypted = userA.Encrypt(m, userB.PublicKey);
+            var decrypted = userB.Decrypt(encrypted);
+            System.Console.WriteLine($"Encrypted: {encrypted.y.ToHexString()}");
+            System.Console.WriteLine($"(c1, c2): ({encrypted.c1}, {encrypted.c2})");
+            System.Console.WriteLine($"Decrypted: {decrypted.ToHexString()}\n");
+
+            var signed = userA.Sign(m);
+            var verified = userB.Verify(signed, userA.PublicKey);
+            System.Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            System.Console.WriteLine($"\nSigned: {signed.s}");
+            System.Console.WriteLine($"Verification result: {verified}");
+        }
+
+        private static void ServerExtra()
+        {
+            var userA = new RabinProvider();
+            var m = MathI.RandomI(100, 1000);
+            System.Console.WriteLine($"Message to cypher: {m.ToHexString()}");
+
+            System.Console.Write("Enter server key(n, b): ");
+            var n = Tools.ToInteger(Console.ReadLine());
+            var b = Tools.ToInteger(Console.ReadLine());
+            var key = (n, b);
+            var encrypted = userA.Encrypt(m, key);
+
+            System.Console.WriteLine($"Encrypted: {encrypted.y.ToHexString()}");
+            System.Console.WriteLine($"(c1, c2): ({encrypted.c1}, {encrypted.c2})");
+        }
+
+        private static void ServerVerify()
+        {
+            var userA = new RabinProvider();
+            var m = MathI.RandomI(100, 1000);
+            System.Console.WriteLine($"Message to cypher: {m.ToHexString()}");
+
+            var signed = userA.Sign(m);
+            System.Console.WriteLine($"PublicKey(n, b): ({userA.PublicKey.n.ToHexString()}, \n{userA.PublicKey.b.ToHexString()})");
+            System.Console.WriteLine($"Signed(m, s): ({signed.m.ToHexString()}, \n{signed.s.ToHexString()})");
         }
 
         private static void ZKPCracker()
         {
-            System.Console.Write("n: ");
-            Integer n = Tools.ToInteger(Console.ReadLine()); 
+            System.Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            System.Console.Write("\nn: ");
+            Integer n = Tools.ToInteger(Console.ReadLine());
             Integer p;
             while (true)
             {
